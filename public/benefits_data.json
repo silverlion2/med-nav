@@ -1,0 +1,80 @@
+
+  "version": "1.0",
+  "last_updated": "2024-05-20",
+  "benefits": [
+    {
+      "id": "public_fund_01",
+      "type": "NATIONAL_INSURANCE",
+      "name": "门诊慢特病（门慢/门特）资质申请",
+      "target_group": ["职工医保", "居民医保"],
+      "disease_scope": ["高血压", "糖尿病", "恶性肿瘤放化疗", "肾透析"],
+      "timeline_tag": "PRE_PAYMENT",
+      "tags": ["✨ 专属隐藏福利", "🚨 必须首购前申请", "大幅降自费"],
+      "description": "确诊大病/慢病后切勿直接普通门诊开药！先去医院医保办申请此资质，门诊买药即可享受等同于住院的高比例报销（70%-90%）。",
+      "official_link": "打开各地国家医保服务平台APP进行申请",
+      "contact_phone": "12393"
+    },
+    {
+      "id": "union_welfare_01",
+      "type": "ENTERPRISE_UNION",
+      "name": "工会职工大病医疗互助金",
+      "target_group": ["工会会员", "国企央企员工"],
+      "disease_scope": ["ALL"],
+      "timeline_tag": "INVOICE_FLOW",
+      "tags": ["内部隐蔽福利", "二次报销"],
+      "description": "在医保、大病保险报销完毕后，凭医院发票原件和结算分割单，向单位所在工会申请专项互助金报销，属于内部救助，极易漏报。",
+      "official_link": "联系企业所在工会委员会",
+      "contact_phone": "12351"
+    },
+    {
+      "id": "pap_aid_01",
+      "type": "PHARMA_PAP",
+      "name": "某知名靶向药慈善援助项目 (PAP)",
+      "target_group": ["ALL"],
+      "disease_scope": ["肺癌", "EGFR突变阳性"],
+      "timeline_tag": "PRE_PAYMENT",
+      "tags": ["✨ 专属隐藏福利", "🚨 必须首次自费前申请", "药企羊毛"],
+      "description": "符合适应症的患者，首月自费购药后，可申请后续用药的“买二赠二”或阶段性全免费。低保户可申请100%全额免费用药。注意：必须在第一次自费购药前注册申请！",
+      "official_link": "http://www.cpwf.org.cn/ (中国初级卫生保健基金会)",
+      "contact_phone": "400-xxx-xxxx"
+    },
+    {
+      "id": "finance_loan_01",
+      "type": "FINANCE_INSTALLMENT",
+      "name": "医疗消费免息/低息分期",
+      "target_group": ["ALL"],
+      "disease_scope": ["高额特药", "高值耗材"],
+      "timeline_tag": "PRE_PAYMENT",
+      "business_priority_score": 10,
+      "tags": ["💰 资金缓解", "商业优先"],
+      "description": "面对几十万的药费账单，如果家庭现金流周转困难，可通过持牌金融机构联合药企提供的贴息政策，申请最高12-24期的免息或低息分期付款。",
+      "official_link": "由院外特药(DTP)药房工作人员提供专属申请二维码",
+      "contact_phone": ""
+    },
+    {
+      "id": "psp_support_01",
+      "type": "PHARMA_PSP",
+      "name": "慢病患者支持计划 (PSP) - 免费送仪器",
+      "target_group": ["ALL"],
+      "disease_scope": ["糖尿病", "高血压"],
+      "timeline_tag": "POST_TREATMENT",
+      "tags": ["羊毛福利", "慢病长效管理"],
+      "description": "长期服用某外资药企降糖药的用户，可凭购药小票在官方公众号注册打卡，免费兑换正品血糖仪及试纸，并可预约专属护士上门指导。",
+      "official_link": "搜索对应药企微信公众号（如拜耳、赛诺菲患者关爱）",
+      "contact_phone": ""
+    },
+    {
+      "id": "commercial_ins_01",
+      "type": "COMMERCIAL_INS",
+      "name": "城市定制型商业医疗险 (惠民保)",
+      "target_group": ["无商业保险", "非标体/已有结节"],
+      "disease_scope": ["ALL"],
+      "timeline_tag": "PREVENTION",
+      "business_priority_score": 8,
+      "tags": ["防漏首选", "不限既往症"],
+      "description": "唯一不限年龄、不限既往症的商业险。每年仅需百元左右，专门报销医保目录外的自费药和特定天价靶向药。强烈建议无常规百万医疗险的人群配置。",
+      "official_link": "微信搜索当地医保局官方公众号获取投保链接",
+      "contact_phone": ""
+    }
+  ]
+}

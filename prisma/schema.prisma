@@ -1,0 +1,76 @@
+// 医疗省钱导航 MVP 版本 Prisma Schema
+// 数据库选用 PostgreSQL (如 MemFire Cloud 或 Vercel Postgres)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. 用户表 (User)
+// ==========================================
+model User {
+  id          String   @id @default(uuid())
+  phone       String?  @unique // 手机号，用于留资转化（可空，方便前置生成匿名Session）
+  sessionId   String?  @unique // 匿名凭证码，前端生成存LocalStorage，无需注册即可使用部分功能
+  
+  // 微信生态备用字段
+  openid      String?  @unique
+  unionid     String?  @unique
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 关系定义
+  assessments Assessment[]
+}
+
+// ==========================================
+// 2. 评估快照表 (Assessment)
+// 核心表：存储用户画像与匹配结果，是商业谈判的“数据底牌”
+// ==========================================
+model Assessment {
+  id                  String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 用户填写的问卷选项原始快照 (JSON 格式)
+  // 示例: {"relation": "父母", "insurance": "职工医保", "disease": "肺癌", "stage": "买药"}
+  profileJson         Json     
+  
+  // 经过本地规则引擎计算后匹配到的项目 ID 数组
+  // 示例: ["pap_aid_01", "installment_02", "union_fund_01"]
+  matchedBenefitsIds  String[] 
+
+  // 埋点跟踪：用户对各个福利卡片的意向反馈记录
+  // 示例: {"pap_aid_01": "准备去申请", "union_fund_01": "我已经激活"}
+  intentionFeedback   Json?    
+
+  createdAt           DateTime @default(now())
+
+  // 关系定义
+  report              Report?
+}
+
+// ==========================================
+// 3. 最终方案报告表 (Report)
+// 用于缓存 AI 生成结果，节省 Token 成本
+// ==========================================
+model Report {
+  id              String     @id @default(uuid())
+  assessmentId    String     @unique
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  
+  // 大模型 (LLM) 最终润色生成的 Markdown 文本
+  contentMarkdown String     @db.Text
+  
+  // 报告的阅读状态
+  viewCount       Int        @default(0)
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
