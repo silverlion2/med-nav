@@ -1,4 +1,8 @@
-import benefitsDB from './mock_benefits_data.json';
+import { createRequire } from 'module';
+
+// 🚀 修复 Vercel Node.js 环境下导入 JSON 报错的问题
+const require = createRequire(import.meta.url);
+const benefitsDB = require('./mock_benefits_data.json');
 
 /**
  * 辅助函数：判断用户的回答是否命中了规则数组
