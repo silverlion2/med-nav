@@ -115,6 +115,13 @@ export default function App() {
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [authError, setAuthError] = useState('');
 
+  // --- 新增：老用户找回状态 ---
+  const [showRetrieveModal, setShowRetrieveModal] = useState(false);
+  const [retrievePhone, setRetrievePhone] = useState('');
+  const [retrieveCode, setRetrieveCode] = useState('');
+  const [retrieveError, setRetrieveError] = useState('');
+  const [isRetrieving, setIsRetrieving] = useState(false);
+
   // --- 逻辑处理 ---
 
   const handleOptionSelect = (qId, option, isMulti) => {
@@ -179,6 +186,45 @@ export default function App() {
     setStep('report');
   };
 
+  // 🔍 新增：处理老用户凭专属码找回档案
+  const handleRetrieve = async () => {
+    if (retrievePhone.length !== 11) {
+      setRetrieveError('请输入正确的11位手机号码');
+      return;
+    }
+    if (retrieveCode.length !== 4) {
+      setRetrieveError('请输入4位专属查询码');
+      return;
+    }
+    
+    setRetrieveError('');
+    setIsRetrieving(true);
+
+    try {
+      const res = await fetch('/api/get-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: retrievePhone, code: retrieveCode })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // 找回成功，一键还原状态并跳转
+        setFormData(data.profileData || {});
+        setPhone(retrievePhone);
+        setShowRetrieveModal(false);
+        setStep('report');
+      } else {
+        setRetrieveError(data.message || '查询不到该档案，请检查手机号或专属码是否正确');
+      }
+    } catch (error) {
+      console.error('找回请求失败:', error);
+      setRetrieveError('网络请求失败，请稍后再试');
+    } finally {
+      setIsRetrieving(false);
+    }
+  };
+
   // ✅ 埋点收集：带上真实的手机号
   const handleFeedback = useCallback((e, itemId, status) => {
     if (e && e.stopPropagation) e.stopPropagation();
@@ -214,6 +260,11 @@ export default function App() {
     setShowAuthModal(false);
     setShowCodeModal(false);
     setAuthError('');
+    // 找回状态重置
+    setShowRetrieveModal(false);
+    setRetrievePhone('');
+    setRetrieveCode('');
+    setRetrieveError('');
   };
 
   const goToHealthBenefits = () => {
@@ -456,10 +507,57 @@ export default function App() {
             <button onClick={() => setStep('wizard')} className="w-full bg-orange-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30 flex justify-center items-center active:scale-95 transition-transform">
               立即免费测算 <ArrowRight className="ml-2" size={20} />
             </button>
-            <button onClick={() => setStep('health_benefits')} className="w-full bg-white text-green-600 border-2 border-green-100 font-bold py-4 rounded-xl shadow-sm flex justify-center items-center active:scale-95 transition-transform mt-3">
+            
+            {/* 新增：老用户凭专属码找回按钮 */}
+            <button onClick={() => setShowRetrieveModal(true)} className="w-full bg-transparent text-orange-600 font-bold py-3.5 rounded-xl border-2 border-orange-200 active:bg-orange-50 transition-colors mt-4 flex justify-center items-center">
+               👉 老用户：凭专属码找回报告
+            </button>
+
+            <button onClick={() => setStep('health_benefits')} className="w-full bg-white text-green-600 border-2 border-green-100 font-bold py-4 rounded-xl shadow-sm flex justify-center items-center active:scale-95 transition-transform mt-4">
               <Heart size={20} className="mr-2" /> 浏览全民通用健康福利
             </button>
           </div>
+
+          {/* 弹窗：老用户找回专属档案 */}
+          {showRetrieveModal && (
+            <div className="absolute inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-slide-up">
+                <div className="flex justify-between items-center mb-5">
+                  <h3 className="text-lg font-bold text-gray-800 flex items-center"><Search className="text-orange-500 mr-2" size={20} /> 找回专属医疗档案</h3>
+                  <button onClick={() => setShowRetrieveModal(false)} className="text-gray-400 p-1">✕</button>
+                </div>
+                
+                <p className="text-xs text-gray-500 mb-5">请输入您建档时预留的手机号和4位专属查询码。</p>
+                
+                <div className="space-y-4 mb-6">
+                  <input 
+                    type="tel" 
+                    placeholder="请输入预留手机号" 
+                    value={retrievePhone}
+                    onChange={(e) => setRetrievePhone(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 outline-none focus:border-orange-500 transition-colors text-sm"
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="请输入4位专属查询码" 
+                    value={retrieveCode}
+                    onChange={(e) => setRetrieveCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 outline-none focus:border-orange-500 transition-colors tracking-widest font-mono text-lg text-center"
+                  />
+                </div>
+
+                {retrieveError && <div className="text-xs text-red-500 mb-4 text-center bg-red-50 p-2 rounded">{retrieveError}</div>}
+
+                <button 
+                  onClick={handleRetrieve} 
+                  disabled={isRetrieving}
+                  className={`w-full text-white font-bold py-3.5 rounded-xl shadow-lg transition-transform flex justify-center items-center ${isRetrieving ? 'bg-orange-300' : 'bg-orange-500 active:scale-95'}`}
+                >
+                  {isRetrieving ? '努力查询中...' : '一键找回报告'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
