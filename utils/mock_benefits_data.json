@@ -1,0 +1,173 @@
+[
+  {
+    "id": "men_te",
+    "title": "门特/门慢 资质申请",
+    "type": "urgent",
+    "conditions": {
+      "must_include": {
+        "insurance": ["职工医保 (国企/央企)", "职工医保 (普通企业)", "居民医保 (新农合)"]
+      },
+      "exclude": {
+        "disease": ["身体健康 (看体检/保险)", "突发意外伤害"],
+        "stage": ["准备出院结账"]
+      },
+      "should_include": {
+        "disease": ["糖尿病 (长期服药)", "肺癌 (拟用靶向药)"],
+        "stage": ["刚拿到确诊单"]
+      }
+    }
+  },
+  {
+    "id": "fen_qi",
+    "title": "医疗消费免息分期",
+    "type": "financial",
+    "conditions": {
+      "must_include": {},
+      "exclude": {
+        "disease": ["身体健康 (看体检/保险)"],
+        "stage": ["准备出院结账"]
+      },
+      "should_include": {
+        "disease": ["肺癌 (拟用靶向药)"],
+        "stage": ["正准备自费买昂贵药"]
+      }
+    }
+  },
+  {
+    "id": "pap_a",
+    "title": "特定靶向药 PAP 慈善援助",
+    "type": "urgent",
+    "conditions": {
+      "must_include": {
+        "disease": ["肺癌 (拟用靶向药)"]
+      },
+      "exclude": {
+        "stage": ["准备出院结账"]
+      },
+      "should_include": {
+        "stage": ["刚拿到确诊单", "正准备自费买昂贵药"],
+        "special_status": ["低保户/特困"]
+      }
+    }
+  },
+  {
+    "id": "pap_b",
+    "title": "免费基因检测(NGS)计划",
+    "type": "urgent",
+    "conditions": {
+      "must_include": {
+        "disease": ["肺癌 (拟用靶向药)"]
+      },
+      "exclude": {
+        "stage": ["准备出院结账"]
+      },
+      "should_include": {
+        "stage": ["刚拿到确诊单"]
+      }
+    }
+  },
+  {
+    "id": "ins_geren",
+    "title": "个人重疾险/百万医疗险理赔",
+    "type": "insurance",
+    "conditions": {
+      "must_include": {
+        "special_status": ["持有商业保险"]
+      },
+      "exclude": {
+        "disease": ["身体健康 (看体检/保险)"]
+      },
+      "should_include": {
+        "stage": ["刚拿到确诊单", "准备出院结账"]
+      }
+    }
+  },
+  {
+    "id": "ins_qiye",
+    "title": "企业补充医疗保险报销",
+    "type": "insurance",
+    "conditions": {
+      "must_include": {
+        "insurance": ["职工医保 (国企/央企)", "职工医保 (普通企业)"]
+      },
+      "exclude": {
+        "disease": ["身体健康 (看体检/保险)"]
+      },
+      "should_include": {
+        "stage": ["准备出院结账"]
+      }
+    }
+  },
+  {
+    "id": "ins_huimin",
+    "title": "城市定制型惠民保配置与理赔",
+    "type": "insurance",
+    "conditions": {
+      "must_include": {},
+      "exclude": {},
+      "should_include": {
+        "disease": ["身体健康 (看体检/保险)", "肺癌 (拟用靶向药)"],
+        "stage": ["尚未生病/刚拿体检单", "准备出院结账"]
+      }
+    }
+  },
+  {
+    "id": "gong_hui",
+    "title": "工会职工大病互助金",
+    "type": "financial",
+    "conditions": {
+      "must_include": {
+        "special_status": ["工会会员"]
+      },
+      "exclude": {
+        "disease": ["身体健康 (看体检/保险)"]
+      },
+      "should_include": {
+        "stage": ["准备出院结账"]
+      }
+    }
+  },
+  {
+    "id": "health_liangai",
+    "title": "妇联/卫健委“两癌”免费筛查",
+    "type": "health",
+    "conditions": {
+      "must_include": {},
+      "exclude": {
+        "relation": ["父亲", "儿子"]
+      },
+      "should_include": {
+        "disease": ["身体健康 (看体检/保险)"],
+        "stage": ["尚未生病/刚拿体检单"]
+      }
+    }
+  },
+  {
+    "id": "health_eap",
+    "title": "企业工会 EAP 援助与疗休养",
+    "type": "health",
+    "conditions": {
+      "must_include": {
+        "special_status": ["工会会员"]
+      },
+      "exclude": {},
+      "should_include": {
+        "disease": ["身体健康 (看体检/保险)"]
+      }
+    }
+  },
+  {
+    "id": "psp_diabetes",
+    "title": "慢病患者支持计划 (PSP)",
+    "type": "health",
+    "conditions": {
+      "must_include": {
+        "disease": ["糖尿病 (长期服药)"]
+      },
+      "exclude": {},
+      "should_include": {
+        "stage": ["正准备自费买昂贵药"]
+      }
+    }
+  }
+]
