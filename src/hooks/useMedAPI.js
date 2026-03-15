@@ -8,7 +8,7 @@ export const useMedAPI = () => {
     setShowAuthModal, setShowCodeModal,
     retrievePhone, retrieveCode, setRetrieveError, setIsRetrieving,
     setFormData, setShowRetrieveModal, setStep,
-    setFeedback
+    setFeedback, setActiveTab, setHasScanned
   } = useAppContext();
 
   const handleGenerateCode = async () => {
@@ -75,7 +75,9 @@ export const useMedAPI = () => {
         setMatchedBenefits(data.engineResult);
         setPhone(retrievePhone);
         setShowRetrieveModal(false);
-        setStep('report');
+        setHasScanned(true);
+        setActiveTab('result');
+        setStep('landing');
       } else {
         setRetrieveError(data.message || '查询不到该档案');
       }

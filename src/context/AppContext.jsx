@@ -7,10 +7,15 @@ export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
   // Navigation & Wizard State
-  const [step, setStep] = useState('landing');
+  const [activeTab, setActiveTab] = useState('home'); // 'home', 'welfare', 'result', 'tasks', 'b2b'
+  const [step, setStep] = useState('landing'); // Controls overlays
   const [wizardStep, setWizardStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [loadingText, setLoadingText] = useState('正在初始化匹配引擎...');
+  
+  // Union specific State
+  const [welfareCategory, setWelfareCategory] = useState('preventive'); // 'preventive' or 'disease'
+  const [hasScanned, setHasScanned] = useState(false);
   
   // Data State
   const [matchedBenefits, setMatchedBenefits] = useState(null);
@@ -33,6 +38,7 @@ export const AppProvider = ({ children }) => {
   const [isRetrieving, setIsRetrieving] = useState(false);
 
   const resetToHome = useCallback(() => {
+    setActiveTab('home');
     setStep('landing');
     setWizardStep(0);
     setFormData({});
@@ -47,6 +53,8 @@ export const AppProvider = ({ children }) => {
     setRetrievePhone('');
     setRetrieveCode('');
     setRetrieveError('');
+    setWelfareCategory('preventive');
+    setHasScanned(false);
   }, []);
 
   const handleOptionSelect = useCallback((qId, option, isMulti) => {
@@ -77,6 +85,9 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const value = {
+    activeTab, setActiveTab,
+    welfareCategory, setWelfareCategory,
+    hasScanned, setHasScanned,
     step, setStep,
     wizardStep, setWizardStep,
     formData, setFormData,

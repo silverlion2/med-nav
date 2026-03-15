@@ -10,13 +10,15 @@ export const AuthModal = () => {
     phone, setPhone, 
     isAgreed, setIsAgreed,
     authError, uniqueCode,
-    setStep
+    setStep, setActiveTab, setHasScanned
   } = useAppContext();
   const { handleGenerateCode } = useMedAPI();
 
   const unlockReport = () => {
     setShowCodeModal(false);
-    setStep('report');
+    setHasScanned(true);
+    setActiveTab('result');
+    setStep('landing');
   };
 
   if (showAuthModal) {
