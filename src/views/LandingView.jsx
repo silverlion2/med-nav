@@ -23,7 +23,7 @@ export const LandingView = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex-1 w-full bg-slate-900 p-6 relative overflow-x-hidden overflow-y-auto flex flex-col items-center justify-between min-h-screen">
+    <div className="flex-1 w-full h-full bg-slate-900 p-6 relative overflow-x-hidden overflow-y-auto flex flex-col items-center justify-between">
       
       {/* Immersive Background */}
       <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-red-600 rounded-full opacity-20 blur-[80px] z-0 animate-pulse"></div>
