@@ -12,6 +12,7 @@ import { CalculatingView, HookingView } from './views/OtherViews';
 import { AuthModal } from './components/AuthModal';
 import { RetrieveModal } from './components/RetrieveModal';
 import { ActiveDetailModal } from './components/ActiveDetailModal';
+import { LandingView } from './views/LandingView';
 
 // Lazy Load Secondary Views (Code Splitting)
 const ReportView = lazy(() => import('./views/ReportView').then(module => ({ default: module.ReportView })));
@@ -34,7 +35,8 @@ const AppContent = () => {
         <div className={`flex-1 overflow-y-auto pb-20 bg-gray-50 sm:pt-6 pt-0 ${step !== 'landing' ? 'hidden' : ''}`}>
           <Suspense fallback={<div className="flex-1 flex items-center justify-center text-gray-400 p-10"><div className="animate-pulse">Loading view...</div></div>}>
             <Routes>
-              <Route path="/" element={<UnionHomeView />} />
+              <Route path="/" element={<LandingView />} />
+              <Route path="/dashboard" element={<UnionHomeView />} />
               <Route path="/welfare" element={
                 <div className="animate-in fade-in duration-300">
                   <div className="bg-white pt-6 pb-2 px-5 border-b sticky top-0 z-10">
