@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { useAuthStore } from '../store/authStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
 export const RetrieveModal = () => {
@@ -9,7 +9,7 @@ export const RetrieveModal = () => {
     retrievePhone, setRetrievePhone,
     retrieveCode, setRetrieveCode,
     retrieveError, isRetrieving
-  } = useAppContext();
+  } = useAuthStore();
   const { handleRetrieve } = useMedAPI();
 
   if (!showRetrieveModal) return null;

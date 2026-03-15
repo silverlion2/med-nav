@@ -1,11 +1,11 @@
 import React from 'react';
 import { Landmark } from 'lucide-react';
 import { benefitDetails } from '../data/content';
-import { useAppContext } from '../context/AppContext';
+import { useDataStore } from '../store/dataStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
 export const FeedbackButtons = ({ itemId }) => {
-  const { feedback } = useAppContext();
+  const feedback = useDataStore(state => state.feedback);
   const { handleFeedback } = useMedAPI();
   const currentStatus = feedback[itemId];
 
@@ -19,7 +19,7 @@ export const FeedbackButtons = ({ itemId }) => {
 };
 
 export const BenefitCard = ({ itemId, lineColor = 'bg-gray-300', borderColor = 'border-gray-200' }) => {
-  const { feedback, setActiveDetail } = useAppContext();
+  const { feedback, setActiveDetail } = useDataStore();
   const item = benefitDetails[itemId];
   if (!item) return null;
 

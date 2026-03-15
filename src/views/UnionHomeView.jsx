@@ -1,10 +1,10 @@
 import React from 'react';
 import { ShieldCheck, Gift } from 'lucide-react';
 import { WelfareLibrary } from '../components/WelfareLibrary';
-import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 export const UnionHomeView = () => {
-  const { setActiveTab } = useAppContext();
+  const navigate = useNavigate();
 
   return (
     <div className="animate-in fade-in duration-300">
@@ -30,7 +30,7 @@ export const UnionHomeView = () => {
             <Gift className="w-5 h-5 mr-2 text-blue-600" /> 
             专属福利库
           </h3>
-          <button onClick={() => setActiveTab('welfare')} className="text-xs text-blue-500 font-bold">查看全部</button>
+          <button onClick={() => navigate('/welfare')} className="text-xs text-blue-500 font-bold">查看全部</button>
         </div>
         <WelfareLibrary />
       </div>

@@ -1,10 +1,13 @@
 import React from 'react';
 import { Home, AlertTriangle, ShieldCheck, Activity, Heart } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
-import { BenefitCard } from '../components/BenefitCard';
+import { useAuthStore } from '../store/authStore';
+import { useNavigationStore } from '../store/navigationStore';
+import { useDataStore } from '../store/dataStore';
 
 export const ReportView = () => {
-  const { phone, resetToHome, matchedBenefits } = useAppContext();
+  const phone = useAuthStore(state => state.phone);
+  const resetToHome = useNavigationStore(state => state.resetNavigation);
+  const matchedBenefits = useDataStore(state => state.matchedBenefits);
 
   const renderDynamicTimeline = () => {
     if (!matchedBenefits) {
@@ -56,7 +59,7 @@ export const ReportView = () => {
       <div className={`p-6 pt-10 text-white rounded-b-3xl shadow-md shrink-0 bg-gradient-to-r from-gray-800 to-gray-700`}>
         <div className="flex justify-between items-start mb-1">
           <div className="text-sm opacity-80">专属档案：{phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
-          <button onClick={resetToHome} className="bg-white/20 p-1.5 rounded-full backdrop-blur-sm"><Home size={16} /></button>
+          <button onClick={resetToHome} className="bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
         </div>
         <h1 className="text-2xl font-bold mb-4">医疗财务规划与省钱指南</h1>
         <div className="bg-white/20 p-3 rounded-lg flex items-start border border-white/30 backdrop-blur-sm">

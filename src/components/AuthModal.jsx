@@ -1,6 +1,8 @@
 import React from 'react';
 import { ShieldCheck, KeySquare, CheckCircle2 } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { useAuthStore } from '../store/authStore';
+import { useNavigationStore } from '../store/navigationStore';
+import { useWizardStore } from '../store/wizardStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
 export const AuthModal = () => {
@@ -9,15 +11,16 @@ export const AuthModal = () => {
     showCodeModal, setShowCodeModal,
     phone, setPhone, 
     isAgreed, setIsAgreed,
-    authError, uniqueCode,
-    setStep, setActiveTab, setHasScanned
-  } = useAppContext();
+    authError, uniqueCode
+  } = useAuthStore();
+  
+  const { setStep } = useNavigationStore();
+  const setHasScanned = useWizardStore(state => state.setHasScanned);
   const { handleGenerateCode } = useMedAPI();
 
   const unlockReport = () => {
     setShowCodeModal(false);
     setHasScanned(true);
-    setActiveTab('result');
     setStep('landing');
   };
 

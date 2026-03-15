@@ -1,17 +1,20 @@
-import { PrismaClient } from '@prisma/client'
-import crypto from 'crypto'
-// 🚀 引入我们刚刚写好的核心逻辑引擎
+import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 import { runDecisionEngine } from '../utils/decisionEngine.js';
+import { Redis } from '@upstash/redis';
 
 const prisma = global.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
-// --- 🛡️ 阶段一基础防护：IP 内存级限流字典 ---
-const rateLimitMap = new Map();
+// Initialize Redis for rate limiting
+// Fallback to null if not configured to prevent crash during local dev without Redis
+const redis = process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN 
+  ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN }) 
+  : null;
 
 // --- 🛡️ 阶段一隐私保护：手机号单向 Hash 加密函数 (PIPL 合规要求) ---
 function hashPhone(phone) {
-  const salt = "med-nav-secure-salt-2024";
+  const salt = process.env.IP_HASH_SALT || "med-nav-secure-salt-2024-fallback";
   return crypto.createHash('sha256').update(phone + salt).digest('hex');
 }
 
@@ -38,24 +41,24 @@ export default async function handler(req, res) {
 
   try {
     // ==========================================
-    // 🛡️ 1. IP 防爆刷逻辑 (Rate Limiting)
+    // 🛡️ 1. IP 防爆刷逻辑 (Rate Limiting via Redis)
     // ==========================================
     const ip = req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'unknown';
-    const now = Date.now();
-    const windowMs = 60 * 1000; 
     
-    if (rateLimitMap.has(ip)) {
-      const userStatus = rateLimitMap.get(ip);
-      if (now - userStatus.startTime < windowMs) {
-        if (userStatus.count >= 5) {
-          return res.status(429).json({ success: false, message: '您的操作过于频繁，为保护系统安全，请1分钟后再试。' });
-        }
-        userStatus.count++;
-      } else {
-        rateLimitMap.set(ip, { count: 1, startTime: now });
+    if (redis) {
+      const windowMs = 60; // 60 seconds
+      const maxRequests = 5;
+      const redisKey = `rate_limit:${ip}`;
+
+      const requests = await redis.incr(redisKey);
+      
+      if (requests === 1) {
+        await redis.expire(redisKey, windowMs);
       }
-    } else {
-      rateLimitMap.set(ip, { count: 1, startTime: now });
+
+      if (requests > maxRequests) {
+        return res.status(429).json({ success: false, message: '您的操作过于频繁，为保护系统安全，请1分钟后再试。' });
+      }
     }
 
     // ==========================================

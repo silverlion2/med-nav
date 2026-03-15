@@ -1,10 +1,13 @@
 import React from 'react';
 import { Stethoscope, Syringe, Zap, Leaf, Lock, Camera, CheckCircle2 } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
-import { BenefitCard } from './BenefitCard';
+import { useWizardStore } from '../store/wizardStore';
+import { useNavigationStore } from '../store/navigationStore';
+import { useDataStore } from '../store/dataStore';
 
 export const WelfareLibrary = () => {
-  const { welfareCategory, setWelfareCategory, hasScanned, setStep, matchedBenefits } = useAppContext();
+  const { welfareCategory, setWelfareCategory, hasScanned } = useWizardStore();
+  const setStep = useNavigationStore(state => state.setStep);
+  const matchedBenefits = useDataStore(state => state.matchedBenefits);
 
   const handleScanClick = () => {
     // Instead of a fake timeout scan, we launch the Med-Nav Wizard

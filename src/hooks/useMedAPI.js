@@ -1,15 +1,18 @@
 import { useCallback } from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useAuthStore } from '../store/authStore';
+import { useWizardStore } from '../store/wizardStore';
+import { useNavigationStore } from '../store/navigationStore';
+import { useDataStore } from '../store/dataStore';
 
 export const useMedAPI = () => {
   const {
-    phone, setPhone, isAgreed, formData,
-    setAuthError, setUniqueCode, setMatchedBenefits,
-    setShowAuthModal, setShowCodeModal,
-    retrievePhone, retrieveCode, setRetrieveError, setIsRetrieving,
-    setFormData, setShowRetrieveModal, setStep,
-    setFeedback, setActiveTab, setHasScanned
-  } = useAppContext();
+    phone, setPhone, isAgreed, setAuthError, setUniqueCode, setShowAuthModal, setShowCodeModal,
+    retrievePhone, retrieveCode, setRetrieveError, setIsRetrieving, setShowRetrieveModal
+  } = useAuthStore();
+  
+  const { formData, setFormData, setHasScanned } = useWizardStore();
+  const { setStep } = useNavigationStore();
+  const { setMatchedBenefits, setFeedback } = useDataStore();
 
   const handleGenerateCode = async () => {
     if (phone.length !== 11) { setAuthError('请输入正确的11位手机号码'); return; }
@@ -76,7 +79,6 @@ export const useMedAPI = () => {
         setPhone(retrievePhone);
         setShowRetrieveModal(false);
         setHasScanned(true);
-        setActiveTab('result');
         setStep('landing');
       } else {
         setRetrieveError(data.message || '查询不到该档案');

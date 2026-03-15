@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useDataStore } from '../store/dataStore';
 
 export const ActiveDetailModal = () => {
-  const { activeDetail, setActiveDetail } = useAppContext();
+  const { activeDetail, setActiveDetail } = useDataStore();
 
   if (!activeDetail) return null;
 

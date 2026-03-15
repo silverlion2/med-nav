@@ -1,9 +1,11 @@
 import React from 'react';
 import { Search, Phone, Home } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { useWizardStore } from '../store/wizardStore';
+import { useAuthStore } from '../store/authStore';
+import { useNavigationStore } from '../store/navigationStore';
 
 export const CalculatingView = () => {
-  const { loadingText } = useAppContext();
+  const loadingText = useWizardStore(state => state.loadingText);
   
   return (
     <div className="flex-1 w-full bg-gray-900 flex flex-col items-center justify-center p-6 text-white">
@@ -17,7 +19,7 @@ export const CalculatingView = () => {
 };
 
 export const HookingView = () => {
-  const { setShowAuthModal } = useAppContext();
+  const setShowAuthModal = useAuthStore(state => state.setShowAuthModal);
 
   return (
     <div className="flex-1 w-full bg-gray-50 relative flex flex-col overflow-hidden">
@@ -39,7 +41,7 @@ export const HookingView = () => {
 };
 
 export const HealthBenefitsView = () => {
-  const { resetToHome } = useAppContext();
+  const resetToHome = useNavigationStore(state => state.resetNavigation);
 
   return (
     <div className="flex-1 w-full bg-gray-50 flex flex-col overflow-y-auto relative pb-10">
@@ -49,7 +51,7 @@ export const HealthBenefitsView = () => {
             <h1 className="text-2xl font-bold mb-2">全民日常健康福利</h1>
             <p className="text-sm opacity-90">亚健康预防与常规筛查的“免费午餐”</p>
           </div>
-          <button onClick={resetToHome} className="bg-white/20 p-2 rounded-full"><Home size={20} /></button>
+          <button onClick={resetToHome} className="bg-white/20 px-3 py-1.5 rounded-full flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
         </div>
       </div>
       <div className="p-6 flex-1 space-y-4">

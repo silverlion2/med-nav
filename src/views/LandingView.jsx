@@ -1,9 +1,11 @@
 import React from 'react';
 import { Activity, ArrowRight, CheckCircle2, Heart } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { useNavigationStore } from '../store/navigationStore';
+import { useAuthStore } from '../store/authStore';
 
 export const LandingView = () => {
-  const { setStep, setShowRetrieveModal } = useAppContext();
+  const setStep = useNavigationStore(state => state.setStep);
+  const setShowRetrieveModal = useAuthStore(state => state.setShowRetrieveModal);
 
   return (
     <div className="flex-1 w-full bg-orange-50 p-6 relative overflow-x-hidden overflow-y-auto flex flex-col">
