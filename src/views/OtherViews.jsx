@@ -1,39 +1,47 @@
-import React from 'react';
-import { Search, Phone, Home } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Phone, Home, Unlock } from 'lucide-react';
 import { useWizardStore } from '../store/wizardStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
+import { useMedAPI } from '../hooks/useMedAPI';
 
 export const CalculatingView = () => {
   const loadingText = useWizardStore(state => state.loadingText);
   
   return (
-    <div className="flex-1 w-full bg-gray-900 flex flex-col items-center justify-center p-6 text-white">
-      <div className="relative w-48 h-48 mb-8 animate-pulse border-4 border-orange-500/20 rounded-full flex items-center justify-center">
-        <Search size={40} className="text-orange-500" />
+    <div className="flex-1 w-full bg-slate-50 flex flex-col items-center justify-center p-6 text-slate-800">
+      <div className="relative w-48 h-48 mb-8 animate-pulse border-4 border-blue-500/20 rounded-full flex items-center justify-center shadow-lg shadow-blue-100">
+        <Search size={40} className="text-blue-600" />
       </div>
-      <h2 className="text-2xl font-bold mb-2">AI 引擎分析中</h2>
-      <p className="text-gray-400 text-sm animate-pulse">{loadingText}</p>
+      <h2 className="text-2xl font-bold mb-2 text-slate-800">数据库分析匹配中</h2>
+      <p className="text-slate-500 text-sm animate-pulse">{loadingText}</p>
     </div>
   );
 };
 
 export const HookingView = () => {
-  const setShowAuthModal = useAuthStore(state => state.setShowAuthModal);
+  const { handleGenerateCode } = useMedAPI();
+  const [loading, setLoading] = useState(false);
+
+  const handleBypass = async () => {
+    setLoading(true);
+    await handleGenerateCode(true); // pass MVP flag
+    setLoading(false);
+  };
 
   return (
-    <div className="flex-1 w-full bg-gray-50 relative flex flex-col overflow-hidden">
+    <div className="flex-1 w-full bg-slate-50 relative flex flex-col overflow-hidden">
       <div className="p-6 filter blur-md opacity-40 flex-1">
-        <div className="h-20 bg-white rounded-xl mb-4"></div>
-        <div className="h-32 bg-white rounded-xl mb-4"></div>
+        <div className="h-20 bg-white rounded-xl mb-4 border border-slate-200"></div>
+        <div className="h-32 bg-white rounded-xl mb-4 border border-slate-200"></div>
       </div>
-      <div className="absolute bottom-0 w-full bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] p-6 z-10 animate-slide-up">
+      <div className="absolute bottom-0 w-full bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.05)] p-6 z-10 animate-slide-up border-t border-slate-100">
         <div className="text-center mb-6">
-          <div className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold mb-3">✨ 分析完成！</div>
-          <h2 className="text-xl font-bold text-gray-800 leading-snug mb-2">系统基于逻辑树匹配了<br/>专属福利与防坑防漏指南</h2>
+          <div className="inline-block bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-bold mb-3 border border-green-200">✓ 分析完成</div>
+          <h2 className="text-xl font-bold text-slate-800 leading-snug mb-2">系统已为您生成<br/>专属医疗福利匹配报告</h2>
         </div>
-        <button onClick={() => setShowAuthModal(true)} className="w-full bg-gray-800 text-white font-bold py-4 rounded-xl flex justify-center items-center">
-          <Phone size={18} className="mr-2" /> 建立档案并解锁报告
+        <button onClick={handleBypass} disabled={loading} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex justify-center items-center shadow-lg shadow-blue-600/30 active:scale-95 transition-transform">
+          <Unlock size={18} className="mr-2" /> {loading ? '正在调取档案...' : '立即查看方案 (内测体验版)'}
         </button>
       </div>
     </div>

@@ -9,33 +9,34 @@ export const UnionTasksView = () => {
           <FileText className="w-6 h-6 text-indigo-600 mr-2" />
           报销追踪管家
         </h2>
-        <p className="text-xs text-gray-500 mt-1">理赔流转进度与随访日历</p>
+        <p className="text-xs text-gray-500 mt-1">资金福利流转进度与时间线追踪</p>
       </div>
       
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
-        <div className="relative border-l-2 border-gray-200 ml-3 space-y-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 pt-8 mb-6 ml-6">
+        <div className="relative border-l-2 border-gray-200 ml-1 space-y-8">
           <div className="relative">
-            <div className="absolute -left-4 w-6 h-6 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
-              <CheckCircle2 className="w-3 h-3 text-white" />
-            </div>
-            <div className="pl-6">
-              <p className="text-sm font-bold text-gray-800">药企援助项目核销</p>
-              <p className="text-xs text-gray-500">已于 10月12日 完成抵扣 ¥500</p>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -left-4 w-6 h-6 bg-purple-500 rounded-full border-4 border-white"></div>
-            <div className="pl-6">
-              <p className="text-sm font-bold text-purple-600">商保/工会理赔流转中</p>
-              <p className="text-xs text-gray-500 mb-2">AI已自动提取您的购药发票，分发至审核中心</p>
-              <span className="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded">预计3日内打款</span>
+            <div className="absolute -left-[45px] top-4 bg-white text-[11px] font-bold text-gray-400 py-1 pr-1">10月12日</div>
+            <div className="absolute -left-[6px] top-6 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+            <div className="pl-6 pt-5">
+              <p className="text-sm font-bold text-gray-800">药企援助项目核销已达成</p>
+              <p className="text-xs text-gray-500 mt-1">通过国家慈善总会渠道完成抵扣 ¥500</p>
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -left-4 w-6 h-6 bg-slate-300 rounded-full border-4 border-white"></div>
-            <div className="pl-6 opacity-60">
-              <p className="text-sm font-bold text-slate-700">大病退税额度记账</p>
-              <p className="text-xs text-gray-500">本笔已累加至您的年度个税台账</p>
+            <div className="absolute -left-[45px] top-4 bg-white text-[11px] font-bold text-purple-600 py-1 pr-1">预计今日</div>
+            <div className="absolute -left-[7px] top-6 w-3 h-3 bg-purple-500 rounded-full border-2 border-white animate-pulse"></div>
+            <div className="pl-6 pt-5">
+              <p className="text-sm font-bold text-purple-600">工会互助理赔审核中</p>
+              <p className="text-xs text-gray-500 mb-2 mt-1">AI已将发票脱敏并分发至官方理赔中心</p>
+              <span className="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded">预计3日内打款至您的医保绑定的银行卡</span>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="absolute -left-[45px] top-4 bg-white text-[11px] font-bold text-gray-400 py-1 pr-1">10月28日</div>
+            <div className="absolute -left-[6px] top-6 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+            <div className="pl-6 pt-5 opacity-60">
+              <p className="text-sm font-bold text-slate-600">大病医疗退税额度记账</p>
+              <p className="text-xs text-gray-500 mt-1">将于月底由税务局进行累计合并</p>
             </div>
           </div>
         </div>

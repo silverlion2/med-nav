@@ -1,7 +1,10 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { questions } from '../data/content';
 
-export const useWizardStore = create((set, get) => ({
+export const useWizardStore = create(
+  persist(
+    (set, get) => ({
   wizardStep: 0,
   formData: {},
   loadingText: '正在初始化匹配引擎...',
@@ -40,4 +43,9 @@ export const useWizardStore = create((set, get) => ({
     welfareCategory: 'preventive',
     hasScanned: false
   })
-}));
+    }),
+    {
+      name: 'med-nav-wizard-storage',
+    }
+  )
+);

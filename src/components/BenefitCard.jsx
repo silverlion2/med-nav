@@ -10,34 +10,34 @@ export const FeedbackButtons = ({ itemId }) => {
   const currentStatus = feedback[itemId];
 
   return (
-    <div className="flex gap-1.5 mt-2">
-      <button onClick={(e) => handleFeedback(e, itemId, '不感兴趣')} className={`flex-1 py-1.5 rounded text-[11px] transition-all duration-200 border ${currentStatus === '不感兴趣' ? 'bg-gray-500 text-white border-gray-500 shadow-inner font-bold' : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 font-medium'}`}>不感兴趣</button>
-      <button onClick={(e) => handleFeedback(e, itemId, '准备申请')} className={`flex-1 py-1.5 rounded text-[11px] transition-all duration-200 border ${currentStatus === '准备申请' ? 'bg-orange-500 text-white border-orange-500 shadow-md font-bold' : 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100 font-bold'}`}>准备申请</button>
-      <button onClick={(e) => handleFeedback(e, itemId, '已激活')} className={`flex-1 py-1.5 rounded text-[11px] transition-all duration-200 border ${currentStatus === '已激活' ? 'bg-green-500 text-white border-green-500 shadow-inner font-bold' : 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100 font-medium'}`}>已激活</button>
+    <div className="flex gap-1.5 mt-3">
+      <button onClick={(e) => handleFeedback(e, itemId, '不感兴趣')} className={`flex-1 py-1.5 rounded-lg text-[11px] transition-all duration-200 border ${currentStatus === '不感兴趣' ? 'bg-slate-200 text-slate-600 border-slate-300 font-bold' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 font-medium'}`}>暂不需要</button>
+      <button onClick={(e) => handleFeedback(e, itemId, '准备申请')} className={`flex-1 py-1.5 rounded-lg text-[11px] transition-all duration-200 border ${currentStatus === '准备申请' ? 'bg-blue-600 text-white border-blue-600 shadow-md font-bold' : 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 font-bold'}`}>加入待办</button>
+      <button onClick={(e) => handleFeedback(e, itemId, '已激活')} className={`flex-1 py-1.5 rounded-lg text-[11px] transition-all duration-200 border ${currentStatus === '已激活' ? 'bg-green-600 text-white border-green-600 shadow-md font-bold' : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 font-medium'}`}>已办理</button>
     </div>
   );
 };
 
-export const BenefitCard = ({ itemId, lineColor = 'bg-gray-300', borderColor = 'border-gray-200' }) => {
+export const BenefitCard = ({ itemId, lineColor = 'bg-slate-300', borderColor = 'border-slate-200' }) => {
   const { feedback, setActiveDetail } = useDataStore();
   const item = benefitDetails[itemId];
   if (!item) return null;
 
   return (
     <div className={`relative pl-6 mb-8 border-l-2 ${borderColor}`}>
-      <div className={`absolute left-[-7px] top-1 w-3 h-3 rounded-full ${lineColor} shadow-sm`}></div>
+      <div className={`absolute left-[-7px] top-1 w-3 h-3 rounded-full ${lineColor} shadow-sm border-2 border-white`}></div>
       <div className={`text-sm font-bold mb-2 ${lineColor.replace('bg-', 'text-')}`}>
-        ⏰ {item.timeline.split('，')[0]}
+        <span className="bg-white px-2 py-0.5 rounded shadow-sm border border-slate-100">⏰ {item.timeline.split('，')[0]}</span>
       </div>
-      <div className={`p-4 rounded-xl shadow-sm border relative cursor-pointer transition-all duration-300 ${feedback[itemId] === '不感兴趣' ? 'bg-gray-50 border-gray-200 opacity-60' : 'bg-white border-gray-100 active:bg-gray-50'}`} onClick={() => setActiveDetail(item)}>
-        <div className="text-[10px] text-blue-700 bg-blue-50 inline-flex items-center px-1.5 py-0.5 rounded mb-1.5">
+      <div className={`p-4 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.03)] border relative cursor-pointer transition-all duration-300 ${feedback[itemId] === '不感兴趣' ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-white border-slate-100 hover:border-blue-200 hover:shadow-[0_4px_20px_rgba(29,78,216,0.08)]'}`} onClick={() => setActiveDetail(item)}>
+        <div className="text-[10px] text-red-700 bg-red-50 inline-flex items-center px-2 py-0.5 rounded mb-2 border border-red-100 font-bold">
           <Landmark size={10} className="mr-1" /> {item.sponsor}
         </div>
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-gray-800 leading-tight pr-2">{item.title}</h3>
-          <span className="text-orange-500 font-bold text-xs bg-orange-50 px-1 py-0.5 rounded shrink-0">💰 {item.savings}</span>
+        <div className="flex justify-between items-start mb-2 gap-2">
+          <h3 className="font-bold text-slate-800 leading-tight flex-1">{item.title}</h3>
+          <span className="text-red-600 font-bold text-xs bg-red-50 px-2 py-1 rounded shrink-0 border border-red-100">💰 {item.savings}</span>
         </div>
-        <p className="text-xs text-gray-500 mb-3 line-clamp-2">{item.target}</p>
+        <p className="text-xs text-slate-500 mb-1 line-clamp-2 leading-relaxed">{item.target}</p>
         <FeedbackButtons itemId={itemId} />
       </div>
     </div>

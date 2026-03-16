@@ -9,6 +9,10 @@ export const WizardView = () => {
   const { setStep } = useNavigationStore();
   const resetToHome = useNavigationStore(state => state.resetNavigation);
 
+  const triggerHaptic = () => {
+    if (navigator.vibrate) navigator.vibrate(40);
+  };
+
   // We need to pass a callback to handleOptionSelect so it knows when to trigger startCalculation
   const startCalculation = () => {
     setStep('calculating');
@@ -44,13 +48,13 @@ export const WizardView = () => {
             <Home size={16} className="mr-1" /> 主页
           </button>
         </div>
-        <div className="text-sm text-orange-500 font-medium mb-2 shrink-0 mt-8">Step {wizardStep + 1} of {questions.length}</div>
+        <div className="text-sm text-orange-500 font-medium mb-2 shrink-0 mt-8">第 {wizardStep + 1} 步，共 {questions.length} 步</div>
         <h2 className="text-2xl font-bold text-gray-800 mb-8 leading-snug pr-8">{q.title}</h2>
         <div className="space-y-3 flex-1 pb-6">
           {q.options.map((opt, idx) => {
             const isSelected = q.multi ? (formData[q.id] || []).includes(opt) : formData[q.id] === opt;
             return (
-              <button key={idx} onClick={() => handleOptionSelect(q.id, opt, q.multi, startCalculation)} className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center ${isSelected ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 bg-white text-gray-700 hover:border-orange-200'}`}>
+              <button key={idx} onClick={() => { triggerHaptic(); handleOptionSelect(q.id, opt, q.multi, startCalculation); }} className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center ${isSelected ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 bg-white text-gray-700 hover:border-orange-200'}`}>
                 <span className="font-medium">{opt}</span>
                 {isSelected && <CheckCircle2 size={20} className="text-orange-500 shrink-0" />}
               </button>
@@ -59,7 +63,7 @@ export const WizardView = () => {
         </div>
         {q.multi && (
           <button 
-            onClick={() => wizardStep < questions.length - 1 ? setWizardStep(wizardStep + 1) : startCalculation()} 
+            onClick={() => { triggerHaptic(); wizardStep < questions.length - 1 ? setWizardStep(wizardStep + 1) : startCalculation(); }} 
             className="mt-4 w-full bg-gray-800 text-white font-bold py-4 rounded-xl active:scale-95 transition-transform"
           >
             下一步

@@ -14,9 +14,17 @@ export const useMedAPI = () => {
   const { setStep } = useNavigationStore();
   const { setMatchedBenefits, setFeedback } = useDataStore();
 
-  const handleGenerateCode = async () => {
-    if (phone.length !== 11) { setAuthError('请输入正确的11位手机号码'); return; }
-    if (!isAgreed) { setAuthError('请先阅读并勾选同意《隐私保护声明》'); return; }
+  const handleGenerateCode = async (isMVPBypass = false) => {
+    let currentPhone = phone;
+    let currentAgreed = isAgreed;
+    
+    if (isMVPBypass === true) {
+      currentPhone = '13800138000'; // MVP Mock Phone
+      currentAgreed = true;
+    }
+
+    if (currentPhone.length !== 11) { setAuthError('请输入正确的11位手机号码'); return; }
+    if (!currentAgreed) { setAuthError('请先阅读并勾选同意《隐私保护声明》'); return; }
     
     setAuthError('正在向云端数据库安全建档...');
     const code = Math.floor(1000 + Math.random() * 9000).toString();
@@ -26,7 +34,7 @@ export const useMedAPI = () => {
       const res = await fetch('/api/create-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code, profileData: formData })
+        body: JSON.stringify({ phone: currentPhone, code, profileData: formData })
       });
 
       if (res.status === 404) {
@@ -47,7 +55,13 @@ export const useMedAPI = () => {
 
       setMatchedBenefits(data.engineResult);
       setShowAuthModal(false);
-      setShowCodeModal(true);
+      
+      if (isMVPBypass === true) {
+        setHasScanned(true);
+        setStep('landing');
+      } else {
+        setShowCodeModal(true);
+      }
     } catch (error) {
       console.error('Fetch Error:', error);
       setAuthError(`⚠️ 网络请求阻断：${error.message}。请刷新页面或检查代理设置。`);

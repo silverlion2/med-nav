@@ -18,7 +18,12 @@ export const AuthModal = () => {
   const setHasScanned = useWizardStore(state => state.setHasScanned);
   const { handleGenerateCode } = useMedAPI();
 
+  const triggerHaptic = () => {
+    if (navigator.vibrate) navigator.vibrate(40);
+  };
+
   const unlockReport = () => {
+    triggerHaptic();
     setShowCodeModal(false);
     setHasScanned(true);
     setStep('landing');
@@ -44,13 +49,13 @@ export const AuthModal = () => {
           />
           
           <label className="flex items-start gap-2 mb-4 p-2 bg-gray-50 rounded-lg cursor-pointer">
-            <input type="checkbox" checked={isAgreed} onChange={(e) => setIsAgreed(e.target.checked)} className="mt-1 shrink-0 accent-orange-500 w-4 h-4" />
+            <input type="checkbox" checked={isAgreed} onChange={(e) => { triggerHaptic(); setIsAgreed(e.target.checked); }} className="mt-1 shrink-0 accent-orange-500 w-4 h-4" />
             <span className="text-[11px] text-gray-500 leading-tight">我已阅读并同意《隐私保护声明》，已知悉本平台仅提供财务补助信息整合，不提供任何临床医疗建议。</span>
           </label>
 
           {authError && <div className="text-[11px] text-red-500 mb-3 text-center bg-red-50 p-2 rounded">{authError}</div>}
 
-          <button onClick={handleGenerateCode} className="w-full bg-orange-500 text-white font-bold py-3.5 rounded-xl shadow-lg active:scale-95 flex justify-center items-center">
+          <button onClick={() => { triggerHaptic(); handleGenerateCode(); }} className="w-full bg-orange-500 text-white font-bold py-3.5 rounded-xl shadow-lg active:scale-95 flex justify-center items-center">
             <KeySquare size={18} className="mr-2"/> 免费生成专属查询码
           </button>
         </div>

@@ -34,7 +34,7 @@ const AppContent = () => {
 
         {/* --- MAIN TAB CONTENT (Routed Layer) --- */}
         <div className={`flex-1 overflow-y-auto pb-20 bg-gray-50 sm:pt-6 pt-0 ${step !== 'landing' ? 'hidden' : ''}`}>
-          <Suspense fallback={<div className="flex-1 flex items-center justify-center text-gray-400 p-10"><div className="animate-pulse">Loading view...</div></div>}>
+          <Suspense fallback={<div className="flex-1 flex items-center justify-center text-gray-400 p-10"><div className="animate-pulse">加载中...</div></div>}>
             <Routes>
               <Route path="/" element={<LandingView />} />
               <Route path="/dashboard" element={<UnionHomeView />} />

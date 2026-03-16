@@ -55,9 +55,12 @@ export const ReportView = () => {
   };
 
   return (
-    <div className="flex-1 w-full bg-gray-50 flex flex-col overflow-y-auto relative pb-10">
-      <div className={`p-6 pt-10 text-white rounded-b-3xl shadow-md shrink-0 bg-gradient-to-r from-gray-800 to-gray-700`}>
-        <div className="flex justify-between items-start mb-1">
+    <div className="flex-1 w-full bg-slate-50 flex flex-col overflow-y-auto relative pb-10">
+      <div className={`p-6 pt-10 text-white rounded-b-3xl shadow-[0_10px_30px_rgba(220,38,38,0.15)] shrink-0 bg-gradient-to-br from-red-600 to-red-700 relative overflow-hidden`}>
+        {/* Decorative circle */}
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+
+        <div className="flex justify-between items-start mb-1 relative z-10">
           <div className="text-sm opacity-80">专属档案：{phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
           <button onClick={resetToHome} className="bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
         </div>
