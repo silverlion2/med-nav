@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDataStore } from '../store/dataStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { benefitDetails } from '../data/content';
+import { AlertTriangle, Activity, ShieldCheck, Heart, Home, ArrowRight } from 'lucide-react';
 
 const typeConfig = {
   urgent: { icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200' },
@@ -55,8 +56,8 @@ export const MatchSummaryView = () => {
     );
   }
 
-  const { urgent = [], financial = [], insurance = [], health = [] } = matchedBenefits;
-  const totalMatches = urgent.length + financial.length + insurance.length + health.length;
+  const { urgent = [], financial = [], insurance = [], health = [], clarification = [] } = matchedBenefits;
+  const totalMatches = urgent.length + financial.length + insurance.length + health.length + clarification.length;
 
   return (
     <div className="flex-1 w-full bg-slate-50 flex flex-col overflow-y-auto relative pb-10">
@@ -91,6 +92,9 @@ export const MatchSummaryView = () => {
           </div>
           <div className="animate-in slide-in-from-bottom-2" style={{ animationDelay: '400ms' }}>
             {health.map(id => <SummaryCard key={id} itemId={id} type="health" />)}
+          </div>
+          <div className="animate-in slide-in-from-bottom-2 opacity-60 grayscale-[50%]" style={{ animationDelay: '500ms' }}>
+            {clarification.map(id => <SummaryCard key={id} itemId={id} type="clarification" />)}
           </div>
 
           {totalMatches === 0 && (
