@@ -10,10 +10,13 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), { status: 405 });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  // Support multiple providers: DeepSeek (preferred, cheaper) → OpenAI (fallback)
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (!deepseekKey && !openaiKey) {
     // Graceful fallback: return a mock streamed summary if no key is configured
-    const fallbackText = "（AI 摘要功能尚未激活。请在 Vercel 环境变量中配置 OPENAI_API_KEY 以启用智能分析。）当前显示的是基于规则引擎的确定性匹配结果。";
+    const fallbackText = "（AI 摘要功能尚未激活。请在 Vercel 环境变量中配置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY 以启用智能分析。）当前显示的是基于规则引擎的确定性匹配结果。";
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       start(controller) {
@@ -29,7 +32,15 @@ export default async function handler(req) {
   try {
     const { matchedBenefits, profileSummary } = await req.json();
 
-    const openai = createOpenAI({ apiKey });
+    // DeepSeek's API is OpenAI-compatible, so we reuse createOpenAI with a custom baseURL
+    let provider, modelId;
+    if (deepseekKey) {
+      provider = createOpenAI({ apiKey: deepseekKey, baseURL: 'https://api.deepseek.com/v1' });
+      modelId = 'deepseek-chat';  // DeepSeek-V3 (the latest, cheapest option)
+    } else {
+      provider = createOpenAI({ apiKey: openaiKey });
+      modelId = 'gpt-4o-mini';
+    }
 
     // Build a deterministic context string from the engine results
     const urgentList = (matchedBenefits?.urgent || []).join('、') || '无';
@@ -59,7 +70,7 @@ export default async function handler(req) {
 请基于以上信息，为该用户撰写一段个性化的分析总结。`;
 
     const result = streamText({
-      model: openai('gpt-4o-mini'),
+      model: provider(modelId),
       system: systemPrompt,
       prompt: userPrompt,
       maxTokens: 300,
