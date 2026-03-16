@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigationStore } from '../store/navigationStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Heart } from 'lucide-react';
+import { ArrowRight, Sparkles, Heart, Pill } from 'lucide-react';
 
 // Custom ACFTU Logo SVG (Simplified representation)
 const ACFTULogo = () => (
@@ -20,6 +20,7 @@ const ACFTULogo = () => (
 export const LandingView = () => {
   const setStep = useNavigationStore(state => state.setStep);
   const setShowRetrieveModal = useAuthStore(state => state.setShowRetrieveModal);
+  const setShowDrugSearchModal = useNavigationStore(state => state.setShowDrugSearchModal);
   const navigate = useNavigate();
 
   return (
@@ -71,6 +72,15 @@ export const LandingView = () => {
         >
            <Sparkles size={16} className="text-orange-400 mr-2" /> 
            启动 AI 极速测算工具
+        </button>
+
+        {/* Third CTA: Search Drug */}
+        <button 
+          onClick={() => setShowDrugSearchModal(true)} 
+          className="w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700 text-white font-bold py-4 rounded-2xl flex justify-center items-center active:bg-slate-700 transition-all outline-none"
+        >
+           <Pill size={16} className="text-blue-400 mr-2" /> 
+           通过药名找福利
         </button>
 
         <div className="flex justify-between mt-6 px-2">

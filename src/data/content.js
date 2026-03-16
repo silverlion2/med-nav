@@ -21,3 +21,18 @@ export const questions = [
   { id: 'disease', title: '患者目前的健康状况？', options: ['身体健康 (看体检/保险)', '肺癌 (拟用靶向药)', '糖尿病 (长期服药)', '突发意外伤害'] },
   { id: 'stage', title: '当前正处于就医的哪个阶段？', options: ['尚未生病/刚拿体检单', '刚拿到确诊单', '正准备自费买昂贵药', '准备出院结账'] }
 ];
+
+export const drugDatabase = {
+  '奥希替尼': ['pap_a', 'men_te'],
+  '阿美替尼': ['pap_a', 'men_te'],
+  '伏美替尼': ['pap_a', 'men_te'],
+  '帕博利珠单抗': ['ins_qiye', 'ins_huimin'],
+  '信迪利单抗': ['ins_huimin', 'gong_hui'],
+  '卡瑞利珠单抗': ['pap_b', 'ins_huimin'],
+  '恩格列净': ['psp_diabetes', 'men_te'],
+  '司美格鲁肽': ['psp_diabetes', 'men_te'],
+  '度拉糖肽': ['psp_diabetes'],
+  '达格列净': ['psp_diabetes', 'men_te'],
+  '曲妥珠单抗': ['health_liangai', 'men_te', 'ins_huimin'],
+  '纳武利尤单抗': ['ins_huimin', 'ins_qiye']
+};

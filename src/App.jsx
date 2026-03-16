@@ -13,6 +13,7 @@ import { AuthModal } from './components/AuthModal';
 import { RetrieveModal } from './components/RetrieveModal';
 import { ActiveDetailModal } from './components/ActiveDetailModal';
 import { LandingView } from './views/LandingView';
+import { DrugSearchModal } from './components/DrugSearchModal';
 
 // Lazy Load Secondary Views (Code Splitting)
 const ReportView = lazy(() => import('./views/ReportView').then(module => ({ default: module.ReportView })));
@@ -74,6 +75,7 @@ const AppContent = () => {
         <AuthModal />
         <RetrieveModal />
         <ActiveDetailModal />
+        <DrugSearchModal />
       </div>
     </div>
   );
