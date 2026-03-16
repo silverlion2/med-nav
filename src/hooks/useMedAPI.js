@@ -5,16 +5,12 @@ import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
 
 export const useMedAPI = () => {
-  const {
-    phone, setPhone, isAgreed, setAuthError, setUniqueCode, setShowAuthModal, setShowCodeModal,
-    retrievePhone, retrieveCode, setRetrieveError, setIsRetrieving, setShowRetrieveModal
-  } = useAuthStore();
-  
-  const { formData, setFormData, setHasScanned } = useWizardStore();
-  const { setStep } = useNavigationStore();
-  const { setMatchedBenefits, setFeedback } = useDataStore();
+  const handleGenerateCode = useCallback(async (isMVPBypass = false, navigate = null) => {
+    const { phone, isAgreed, setAuthError, setUniqueCode, setShowAuthModal, setShowCodeModal } = useAuthStore.getState();
+    const { formData, setHasScanned } = useWizardStore.getState();
+    const { setStep } = useNavigationStore.getState();
+    const { setMatchedBenefits } = useDataStore.getState();
 
-  const handleGenerateCode = async (isMVPBypass = false, navigate = null) => {
     let currentPhone = phone;
     let currentAgreed = isAgreed;
     
@@ -23,19 +19,24 @@ export const useMedAPI = () => {
       currentAgreed = true;
     }
 
-    if (currentPhone.length !== 11) { setAuthError('请输入正确的11位手机号码'); return; }
+    if (currentPhone.length !== 11 || !/^\d{11}$/.test(currentPhone)) { setAuthError('请输入正确的11位手机号码'); return; }
     if (!currentAgreed) { setAuthError('请先阅读并勾选同意《隐私保护声明》'); return; }
     
     setAuthError('正在向云端数据库安全建档...');
     const code = Math.floor(1000 + Math.random() * 9000).toString();
     setUniqueCode(code);
     
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     try {
       const res = await fetch('/api/create-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone, code, profileData: formData })
+        body: JSON.stringify({ phone: currentPhone, code, profileData: formData }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (res.status === 404) {
         setAuthError('⚠️ 错误(404)：当前处于本地环境或API未部署，请推送代码至Vercel线上测试！');
@@ -64,24 +65,39 @@ export const useMedAPI = () => {
         setShowCodeModal(true);
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       console.error('Fetch Error:', error);
-      setAuthError(`⚠️ 网络请求阻断：${error.message}。请刷新页面或检查代理设置。`);
+      if (error.name === 'AbortError') {
+        setAuthError('⚠️ 请求超时，请检查网络连接后重试。');
+      } else {
+        setAuthError(`⚠️ 网络请求阻断：${error.message}。请刷新页面或检查代理设置。`);
+      }
     }
-  };
+  }, []);
 
-  const handleRetrieve = async (navigate = null) => {
-    if (retrievePhone.length !== 11) { setRetrieveError('请输入正确的11位手机号码'); return; }
-    if (retrieveCode.length !== 4) { setRetrieveError('请输入4位专属查询码'); return; }
+  const handleRetrieve = useCallback(async (navigate = null) => {
+    const { retrievePhone, retrieveCode, setRetrieveError, setIsRetrieving, setShowRetrieveModal, setPhone } = useAuthStore.getState();
+    const { setFormData, setHasScanned } = useWizardStore.getState();
+    const { setStep } = useNavigationStore.getState();
+    const { setMatchedBenefits } = useDataStore.getState();
+
+    if (retrievePhone.length !== 11 || !/^\d{11}$/.test(retrievePhone)) { setRetrieveError('请输入正确的11位手机号码'); return; }
+    if (retrieveCode.length !== 4 || !/^\d{4}$/.test(retrieveCode)) { setRetrieveError('请输入4位专属查询码'); return; }
     
     setRetrieveError('');
     setIsRetrieving(true);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
       const res = await fetch('/api/get-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: retrievePhone, code: retrieveCode })
+        body: JSON.stringify({ phone: retrievePhone, code: retrieveCode }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (res.status === 404) { setRetrieveError('⚠️ 错误：API不存在，请推送到 Vercel 在线测试！'); setIsRetrieving(false); return; }
       if (res.status === 500) { setRetrieveError('⚠️ 错误：数据库连接异常，请检查 Vercel DATABASE_URL。'); setIsRetrieving(false); return; }
@@ -100,22 +116,35 @@ export const useMedAPI = () => {
         setRetrieveError(data.message || '查询不到该档案');
       }
     } catch (error) {
-      setRetrieveError('网络异常，请推送到 Vercel 线上环境测试');
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        setRetrieveError('网络请求超时，请检查网络连接');
+      } else {
+        setRetrieveError('网络异常，请推送到 Vercel 线上环境测试');
+      }
     } finally {
-      setIsRetrieving(false);
+      useAuthStore.getState().setIsRetrieving(false);
     }
-  };
+  }, []);
 
   const handleFeedback = useCallback((e, itemId, status) => {
     if (e && e.stopPropagation) e.stopPropagation();
+    const { phone } = useAuthStore.getState();
+    const { setFeedback } = useDataStore.getState();
+    
     setFeedback(prev => ({ ...prev, [itemId]: status }));
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     fetch('/api/save-feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: phone || 'anonymous-user', feedbackData: { benefitId: itemId, action: status, time: new Date().toISOString() }})
-    }).catch(error => console.error('埋点失败:', error));
-  }, [phone, setFeedback]);
+      body: JSON.stringify({ userId: phone || 'anonymous-user', feedbackData: { benefitId: itemId, action: status, time: new Date().toISOString() }}),
+      signal: controller.signal
+    }).catch(error => console.error('埋点失败:', error))
+      .finally(() => clearTimeout(timeoutId));
+  }, []);
 
   return { handleGenerateCode, handleRetrieve, handleFeedback };
 };

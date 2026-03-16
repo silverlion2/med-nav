@@ -1,0 +1,430 @@
+[
+  {
+    "id": "men_te",
+    "title": "门特/门慢 资质申请",
+    "sponsor": "国家医保局",
+    "benefit_type": "insurance_reimbursement",
+    "description": "针对确诊规定慢性病（如高血压、糖尿病）或重大疾病（如恶性肿瘤、尿毒症）的患者，可申请门诊特殊病种待遇，大幅提高门诊报销比例，减轻长期门诊用药负担。",
+    "financial_impact": {
+      "estimated_savings_min": 15000,
+      "estimated_savings_max": 30000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["employee_basic", "resident_basic"],
+      "disease_tags": ["chronic_disease", "malignant_tumor", "uremia", "hypertension", "diabetes"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "确诊后，【第一次门诊开药前】必须办理，否则无法追溯报销。",
+      "required_materials_list": ["身份证", "社保卡", "诊断书原件", "近期相关检查报告"],
+      "application_process": [
+        "1. 准备确诊病历资料",
+        "2. 前往医院医保办盖章确认",
+        "3. 在医保局窗口或官方“国家医保服务平台App”提交备案"
+      ]
+    }
+  },
+  {
+    "id": "fen_qi",
+    "title": "医疗消费免息分期",
+    "sponsor": "持牌金融机构联合药企",
+    "benefit_type": "financial_assistance",
+    "description": "为需要自费支付高昂药费/耗材费，且家庭短期现金流紧张的患者提供免息分期服务，缓解一次性支付压力。",
+    "financial_impact": {
+      "estimated_savings_min": 4500,
+      "estimated_savings_max": 4500,
+      "currency": "CNY",
+      "timeframe": "one_time",
+      "note": "约省利息"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["any"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 18,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "在院外DTP特药药房【付款前】申请。",
+      "required_materials_list": ["申请人身份证", "处方单", "关系证明（如代办）"],
+      "application_process": [
+        "1. 在特药药房提出分期意向",
+        "2. 建议优先使用医保亲情账户或咨询国家正规低息贷款",
+        "3. 通过官方APP填写资料进行审核"
+      ]
+    }
+  },
+  {
+    "id": "pap_a",
+    "title": "特定靶向药 PAP 慈善援助",
+    "sponsor": "中国初级卫生保健基金会等",
+    "benefit_type": "drug_discount",
+    "description": "针对符合特定病症（如肺癌EGFR阳性、乳腺癌HER2阳性等）且使用指定靶向药的患者提供赠药援助。低保户可全免，普通低收入家庭按比例援助（如买二赠二）。",
+    "financial_impact": {
+      "estimated_savings_min": 50000,
+      "estimated_savings_max": 500000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["malignant_tumor", "lung_cancer", "breast_cancer", "targeted_therapy"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["low_income", "poverty_stricken"]
+    },
+    "actionability": {
+      "timeline_strictness": "🚨 绝对红线：必须在【第一次自费购药前】注册并提交材料！",
+      "required_materials_list": ["病理/基因检测报告", "处方", "低保证明或收入证明"],
+      "application_process": [
+        "1. 关注中华慈善总会等官方认证基金会公众号注册档案",
+        "2. 提交医学与经济证明材料审核",
+        "3. 审核通过后到指定药房领取赠药"
+      ]
+    }
+  },
+  {
+    "id": "pap_b",
+    "title": "免费基因检测(NGS)计划",
+    "sponsor": "中华慈善总会联合药企",
+    "benefit_type": "diagnostic_support",
+    "description": "为初诊恶性肿瘤或耐药后需寻找新方案的患者提供免费的下一代测序（NGS）基因检测服务。",
+    "financial_impact": {
+      "estimated_savings_min": 12000,
+      "estimated_savings_max": 12000,
+      "currency": "CNY",
+      "timeframe": "one_time"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["malignant_tumor"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "在住院期间或首轮用药前由主治医生发起。",
+      "required_materials_list": ["病理组织切片或抽血血样", "知情同意书"],
+      "application_process": [
+        "1. 医生开具基因检测申请单",
+        "2. 填写患者入组申请书",
+        "3. 样本送至指定实验室检测"
+      ]
+    }
+  },
+  {
+    "id": "ins_geren",
+    "title": "商业重疾险/医疗险理赔",
+    "sponsor": "商业保险公司",
+    "benefit_type": "insurance_reimbursement",
+    "description": "针对此前已购买过商业医疗险或重疾险的患者，在确诊重疾或发生意外后申请理赔，可覆盖合规自费支出及收入损失。",
+    "financial_impact": {
+      "estimated_savings_min": 50000,
+      "estimated_savings_max": 1000000,
+      "currency": "CNY",
+      "timeframe": "one_time"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["commercial_health", "commercial_critical_illness"],
+      "disease_tags": ["critical_illness", "accident"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "确诊重疾或发生意外后【24小时内】拨打保司电话报案。",
+      "required_materials_list": ["保单号", "完整病历", "发票清单及明细", "身份证"],
+      "application_process": [
+        "1. 报案获得理赔号",
+        "2. 申请“住院垫付”服务（若保单支持）",
+        "3. 出院后提交所有发票清单与病历"
+      ]
+    }
+  },
+  {
+    "id": "ins_qiye",
+    "title": "企业补充医疗保险报销",
+    "sponsor": "用人单位(HR/工会)",
+    "benefit_type": "insurance_reimbursement",
+    "description": "企业为员工购买的补充医疗保险，在基本医保结算后，可进一步报销医保内个人自付部分（通常90%以上）。",
+    "financial_impact": {
+      "estimated_savings_min": 1000,
+      "estimated_savings_max": 50000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["employee_basic"],
+      "disease_tags": ["any"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 16,
+        "max_age": 70,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["corporate_employee"]
+    },
+    "actionability": {
+      "timeline_strictness": "出院结算或门诊就医完成后 30 天～3个月内。",
+      "required_materials_list": ["发票原件（或电子发票打印件）", "医保结算单", "处方明细"],
+      "application_process": [
+        "1. 向HR领取材料或在员工App提交",
+        "2. 邮寄或拍照上传单据发票",
+        "3. 审核通过后打入工资卡"
+      ]
+    }
+  },
+  {
+    "id": "ins_huimin",
+    "title": "城市定制型惠民保报销",
+    "sponsor": "当地政府指导+保司承保",
+    "benefit_type": "insurance_reimbursement",
+    "description": "由政府指导的普惠型商业补充医疗保险（如“穗岁康”），生病自费达标后理赔，为大病自费兜底。",
+    "financial_impact": {
+      "estimated_savings_min": 20000,
+      "estimated_savings_max": 100000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["employee_basic", "resident_basic"],
+      "disease_tags": ["major_disease", "high_expense"],
+      "geographic_scope": ["national_local_variations"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "健康期即可配置；生病自费达标（如免赔额1.5万-2万）后理赔。",
+      "required_materials_list": ["身份证", "医保卡", "发票", "出院小结", "费用清单"],
+      "application_process": [
+        "1. 微信搜索“城市名+惠民保”（如广州地区搜“穗岁康”）",
+        "2. 线上提交理赔申请及结算单据"
+      ]
+    }
+  },
+  {
+    "id": "gong_hui",
+    "title": "工会职工医疗互助活动",
+    "sponsor": "各级总工会",
+    "benefit_type": "financial_assistance",
+    "description": "针对所在单位成立工会并缴纳了互助金的正式员工，当医保统筹支付后的个人自费部分达到规定标准时，可申请互助金补助。",
+    "financial_impact": {
+      "estimated_savings_min": 10000,
+      "estimated_savings_max": 50000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["employee_基本"],
+      "disease_tags": ["high_expense", "hospitalization"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 16,
+        "max_age": 70,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["union_member"]
+    },
+    "actionability": {
+      "timeline_strictness": "出院结算后一年内提交申请。",
+      "required_materials_list": ["工会会员证（卡）", "发票分割单", "出院小结"],
+      "application_process": [
+        "1. 咨询公司工会负责人或经办人",
+        "2. 填写《职工医疗互助补助申请表》",
+        "3. 提供发票复印件及医保结算单"
+      ]
+    }
+  },
+  {
+    "id": "health_liangai",
+    "title": "妇联/卫健委“两癌”免费筛查",
+    "sponsor": "国家卫生健康委 / 妇联",
+    "benefit_type": "diagnostic_support",
+    "description": "面向35-64周岁适龄妇女（主要面向农村和城镇低保群体）提供的免费乳腺癌、宫颈癌筛查服务。确诊困难群体可额外申请救助金。",
+    "financial_impact": {
+      "estimated_savings_min": 500,
+      "estimated_savings_max": 1000,
+      "currency": "CNY",
+      "timeframe": "one_time"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["preventative_care", "breast_cancer_screening", "cervical_cancer_screening"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 35,
+        "max_age": 64,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["female", "rural_or_low_income_preferred"]
+    },
+    "actionability": {
+      "timeline_strictness": "健康期每年或每三年一次。",
+      "required_materials_list": ["身份证", "户口本或居住证"],
+      "application_process": [
+        "1. 关注当地妇幼保健院公众号或等居委会/村委会通知",
+        "2. 预约免费筛查名额",
+        "3. 携带证件前往检查"
+      ]
+    }
+  },
+  {
+    "id": "health_eap",
+    "title": "企业工会 EAP 援助与疗休养",
+    "sponsor": "所在企业工会委员会",
+    "benefit_type": "social_service",
+    "description": "大中型国企、互联网大厂等在职职工可享受的员工帮助计划（EAP），包括免费心理咨询和年度疗休养名额。",
+    "financial_impact": {
+      "estimated_savings_min": 2000,
+      "estimated_savings_max": 5000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["mental_health", "preventative_care", "recovery"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 16,
+        "max_age": 70,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["corporate_employee", "union_member"]
+    },
+    "actionability": {
+      "timeline_strictness": "健康期或患病康复期均可申请。",
+      "required_materials_list": ["员工工牌", "内网审批流"],
+      "application_process": [
+        "1. 登录公司内网/行政系统",
+        "2. 预约免费心理咨询热线或申请年度疗休养名额"
+      ]
+    }
+  },
+  {
+    "id": "psp_diabetes",
+    "title": "慢病患者支持计划 (PSP) - 免费领仪器",
+    "sponsor": "拜耳/赛诺菲/阿斯利康等药企",
+    "benefit_type": "drug_discount",
+    "description": "针对长期服用特定进口降糖药/降压药的慢性病患者，药企免费赠送原厂血糖仪或智能血压计等仪器。",
+    "financial_impact": {
+      "estimated_savings_min": 500,
+      "estimated_savings_max": 500,
+      "currency": "CNY",
+      "timeframe": "one_time"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["diabetes", "hypertension", "chronic_disease"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": []
+    },
+    "actionability": {
+      "timeline_strictness": "日常门诊自费或医保购药后。",
+      "required_materials_list": ["医院处方", "购药发票/小票", "药盒包装"],
+      "application_process": [
+        "1. 关注对应药企患者关爱公众号",
+        "2. 注册并上传购药凭证",
+        "3. 审核通过后免费邮寄到家"
+      ]
+    }
+  },
+  {
+    "id": "gong_shang",
+    "title": "工伤保险待遇认定与理赔",
+    "sponsor": "人社局工伤保险基金",
+    "benefit_type": "insurance_reimbursement",
+    "description": "在工作时间和工作场所内，因工作原因受到事故伤害（或患职业病）的职工，可全额报销工伤医疗费，含停工留薪期工资。",
+    "financial_impact": {
+      "estimated_savings_min": 10000,
+      "estimated_savings_max": 500000,
+      "currency": "CNY",
+      "timeframe": "one_time"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["employee_basic"],
+      "disease_tags": ["occupational_disease", "accident", "work_injury"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 16,
+        "max_age": 70,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["corporate_employee"]
+    },
+    "actionability": {
+      "timeline_strictness": "事故发生之日起【30日内】所在单位需提交工伤认定申请（员工个人可1年内提）。",
+      "required_materials_list": ["工伤认定决定书", "劳动关系证明", "医疗票据及每日清单"],
+      "application_process": [
+        "1. 事故发生后经急救就医，尽早告知接诊医生可能为工伤",
+        "2. 单位HR向社保局提交工伤认定申请",
+        "3. 认定通过后，医药费直接由工伤基金支付或报销"
+      ]
+    }
+  },
+  {
+    "id": "di_bao",
+    "title": "民政局大病医疗救助",
+    "sponsor": "当地县/区级民政局",
+    "benefit_type": "financial_assistance",
+    "description": "针对低保对象、特困人员、低保边缘家庭及因病致贫重病患者，在基本医保、大病保险报销后，再救助剩余合规费用的 60%-100%。",
+    "financial_impact": {
+      "estimated_savings_min": 10000,
+      "estimated_savings_max": 200000,
+      "currency": "CNY",
+      "timeframe": "per_year"
+    },
+    "eligibility_rules": {
+      "required_insurance_types": ["any"],
+      "disease_tags": ["major_disease", "high_expense"],
+      "geographic_scope": ["national"],
+      "demographics": {
+        "min_age": 0,
+        "max_age": 200,
+        "income_threshold_monthly_cny": null
+      },
+      "special_status_required": ["low_income", "poverty_stricken"]
+    },
+    "actionability": {
+      "timeline_strictness": "出院且基本医保、大病保险报销完成后申请。",
+      "required_materials_list": ["低保证/特困证或家庭经济状况核对授权书", "医保结算单", "出院小结", "发票原件"],
+      "application_process": [
+        "1. 准备医保结算后的发票底联及各项费用明细",
+        "2. 在街道办窗口或“国家医保服务平台App”提交申请",
+        "3. 审核公示后发放救助金至个人社保卡银行关联账户"
+      ]
+    }
+  }
+]

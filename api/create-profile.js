@@ -26,9 +26,13 @@ async function withRetry(fn, retries = 3) {
     try {
       return await fn();
     } catch (err) {
-      const isNetworkError = err.message?.includes('Can\'t reach database') || err.code === 'P1001';
+      const isNetworkError = err.message?.includes('Can\'t reach database') || 
+                             err.code === 'P1001' || 
+                             err.code === 'P5003' || 
+                             err.message?.includes('connection limit') || 
+                             err.message?.includes('timeout');
       if (isNetworkError && i < retries - 1) {
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i + 1) * 1000));
         continue;
       }
       throw err;
@@ -66,6 +70,8 @@ export default async function handler(req, res) {
     // ==========================================
     const { phone, code, profileData } = req.body;
     if (!phone || !code) return res.status(400).json({ success: false, message: '缺少核心鉴权参数' });
+    if (typeof phone !== 'string' || phone.length !== 11 || !/^\d{11}$/.test(phone)) return res.status(400).json({ success: false, message: '手机号格式不正确' });
+    if (typeof code !== 'string' || code.length !== 4 || !/^\d{4}$/.test(code)) return res.status(400).json({ success: false, message: '专属码格式不正确' });
 
     // 将明文手机号转化为 Hash 密文
     const secureHashedPhone = hashPhone(phone);

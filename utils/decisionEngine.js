@@ -1,79 +1,79 @@
-import { createRequire } from 'module';
-
-// 🚀 修复 Vercel Node.js 环境下导入 JSON 报错的问题
-const require = createRequire(import.meta.url);
-const benefitsDB = require('./mock_benefits_data.json');
+import { benefitEngine } from '../src/services/BenefitEngine.js';
 
 /**
- * 辅助函数：判断用户的回答是否命中了规则数组
- * @param {String|Array} userValue - 用户的回答 (如 "肺癌" 或 ["工会会员", "退役军人"])
- * @param {Array} conditionArray - 规则配置的数组 (如 ["工会会员", "持有商业保险"])
- * @returns {Boolean} 是否命中
- */
-function isMatch(userValue, conditionArray) {
-  if (!userValue || conditionArray.length === 0) return false;
-  
-  if (Array.isArray(userValue)) {
-    return userValue.some(val => conditionArray.includes(val));
-  }
-  return conditionArray.includes(userValue);
-}
-
-/**
- * 医疗省钱导航：高召回率规则匹配引擎
- * @param {Object} profileData - 用户填写的问卷快照
- * @returns {Object} 按分类和优先级排好序的福利项目 IDs
+ * 医疗省钱导航：高召回率规则匹配引擎 (v2: Robust Benefit Engine)
+ * @param {Object} profileData - 用户填写的问卷快照 (来自 WizardView)
+ * @returns {Object} 引擎算出的最终匹配结果，包含 eligible 和 clarification 状态
  */
 export function runDecisionEngine(profileData) {
-  const results = {
+  // 1. 将前端问卷的松散数据映射为引擎需要的严格 Schema (UserProfile)
+  const structuredProfile = mapFormDataToProfile(profileData || {});
+  
+  // 2. 运行强类型规则引擎
+  const evaluationResult = benefitEngine.evaluate(structuredProfile);
+  
+  // 3. 将结果重新分组给前端渲染 (保持兼容原有的 UI 分组逻辑，但数据来源变严格)
+  const groupedResults = {
     urgent: [],      // 紧急必须做的 (门特、PAP)
     financial: [],   // 找钱筹钱的 (免息分期、工会互助)
     insurance: [],   // 保险理赔的 (商保、惠民保)
-    health: []       // 健康羊毛 (筛查、EAP、PSP)
+    health: [],      // 健康羊毛 (筛查、EAP、PSP)
+    clarification: evaluationResult.needsClarification.map(item => item.benefit.id) // 留给 AI 追问的单子
   };
 
-  benefitsDB.forEach(benefit => {
-    const { must_include, exclude, should_include } = benefit.conditions;
-    
-    // 1. 拦截网关 1：检查 Exclude (踩雷即出局)
-    let isExcluded = false;
-    for (const key in exclude) {
-      if (exclude[key].length > 0 && isMatch(profileData[key], exclude[key])) {
-        isExcluded = true;
-        break; 
-      }
-    }
-    if (isExcluded) return; 
-
-    // 2. 拦截网关 2：检查 Must Include (缺少即出局)
-    let isMustPassed = true;
-    for (const key in must_include) {
-      if (must_include[key].length > 0 && !isMatch(profileData[key], must_include[key])) {
-        isMustPassed = false;
-        break; 
-      }
-    }
-    if (!isMustPassed) return;
-
-    // 3. 加分项计算：检查 Should Include (算排名)
-    let score = 0;
-    for (const key in should_include) {
-      if (should_include[key].length > 0 && isMatch(profileData[key], should_include[key])) {
-        score += 1; 
-      }
-    }
-
-    benefit.score = score;
-    if (results[benefit.type]) {
-      results[benefit.type].push(benefit);
+  // 为兼容 UI 分组，根据 benefit_type 分发
+  evaluationResult.eligible.forEach(benefit => {
+    switch (benefit.benefit_type) {
+      case 'insurance_reimbursement':
+        if (benefit.id === 'men_te') groupedResults.urgent.push(benefit.id);
+        else groupedResults.insurance.push(benefit.id);
+        break;
+      case 'financial_assistance':
+        groupedResults.financial.push(benefit.id);
+        break;
+      case 'drug_discount':
+        if (benefit.id === 'pap_a') groupedResults.urgent.push(benefit.id);
+        else groupedResults.health.push(benefit.id);
+        break;
+      case 'social_service':
+      case 'diagnostic_support':
+        groupedResults.health.push(benefit.id);
+        break;
     }
   });
 
-  // 4. 最终排序：按 Score 降序排列并剥离出纯 ID
-  for (const type in results) {
-    results[type].sort((a, b) => b.score - a.score);
-    results[type] = results[type].map(b => b.id);
-  }
+  return groupedResults;
+}
 
-  return results;
+/**
+ * 将前端 WizardView 表单数据映射到 BenefitEngine 需要的 UserProfile 格式
+ */
+function mapFormDataToProfile(formData) {
+  const profile = {
+    insurance: [],
+    diseases: [],
+    location: 'national',
+    age: null,
+    monthly_income: null,
+    special_status: []
+  };
+
+  // 映射医保类型 (q4 -> insurance)
+  const rawInsurance = formData.insurance || formData.q4 || '';
+  if (rawInsurance.includes('职工')) profile.insurance.push('employee_basic');
+  if (rawInsurance.includes('居民') || rawInsurance.includes('新农合')) profile.insurance.push('resident_basic');
+  if (rawInsurance.includes('无基本医保')) profile.insurance.push('none');
+
+  // 映射疾病 (q1 -> diseases)
+  const rawDisease = formData.disease || formData.q1 || '';
+  if (rawDisease.includes('恶性肿瘤')) profile.diseases.push('malignant_tumor', 'lung_cancer', 'breast_cancer');
+  if (rawDisease.includes('慢性病')) profile.diseases.push('chronic_disease', 'diabetes', 'hypertension');
+
+  // 映射特殊身份 (q5 -> special_status) - 仅限兼容老表单测试数据，新表单把这些留给AI补充
+  const rawStatus = formData.q5 || [];
+  if (rawStatus.includes('北京市总工会会员')) profile.special_status.push('union_member');
+  if (rawStatus.includes('属于困难群体 (低保/特困/边缘)')) profile.special_status.push('low_income', 'poverty_stricken');
+  if (rawStatus.includes('患病前有购买商业保险')) profile.insurance.push('commercial_health', 'commercial_critical_illness');
+
+  return profile;
 }

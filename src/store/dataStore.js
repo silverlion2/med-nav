@@ -12,7 +12,9 @@ export const useDataStore = create((set) => ({
   activeProfileId: 'self',
 
   setMatchedBenefits: (benefits) => set({ matchedBenefits: benefits }),
-  setFeedback: (feedback) => set({ feedback }),
+  setFeedback: (feedbackUpdate) => set((state) => ({ 
+    feedback: typeof feedbackUpdate === 'function' ? feedbackUpdate(state.feedback) : feedbackUpdate 
+  })),
   setActiveDetail: (detail) => set({ activeDetail: detail }),
   setUnionType: (type) => set({ unionType: type }),
 

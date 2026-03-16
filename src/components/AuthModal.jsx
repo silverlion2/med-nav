@@ -7,13 +7,16 @@ import { useMedAPI } from '../hooks/useMedAPI';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthModal = () => {
-  const { 
-    showAuthModal, setShowAuthModal, 
-    showCodeModal, setShowCodeModal,
-    phone, setPhone, 
-    isAgreed, setIsAgreed,
-    authError, uniqueCode
-  } = useAuthStore();
+  const showAuthModal = useAuthStore(state => state.showAuthModal);
+  const setShowAuthModal = useAuthStore(state => state.setShowAuthModal);
+  const showCodeModal = useAuthStore(state => state.showCodeModal);
+  const setShowCodeModal = useAuthStore(state => state.setShowCodeModal);
+  const phone = useAuthStore(state => state.phone);
+  const setPhone = useAuthStore(state => state.setPhone);
+  const isAgreed = useAuthStore(state => state.isAgreed);
+  const setIsAgreed = useAuthStore(state => state.setIsAgreed);
+  const authError = useAuthStore(state => state.authError);
+  const uniqueCode = useAuthStore(state => state.uniqueCode);
   
   const { setStep } = useNavigationStore();
   const setHasScanned = useWizardStore(state => state.setHasScanned);

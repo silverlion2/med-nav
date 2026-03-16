@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, ShieldCheck, Activity, Heart, AlertTriangle } from 'lucide-react';
 import { useDataStore } from '../store/dataStore';
+import { useNavigationStore } from '../store/navigationStore';
 import { benefitDetails } from '../data/content';
 
-const SummaryCard = ({ itemId, type }) => {
+const typeConfig = {
+  urgent: { icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200' },
+  financial: { icon: Activity, color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-200' },
+  insurance: { icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-50', border: 'border-blue-200' },
+  health: { icon: Heart, color: 'text-green-500', bg: 'bg-green-50', border: 'border-green-200' },
+};
+
+const SummaryCard = React.memo(({ itemId, type }) => {
   const item = benefitDetails[itemId];
   if (!item) return null;
-
-  const typeConfig = {
-    urgent: { icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200' },
-    financial: { icon: Activity, color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-200' },
-    insurance: { icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-50', border: 'border-blue-200' },
-    health: { icon: Heart, color: 'text-green-500', bg: 'bg-green-50', border: 'border-green-200' },
-  };
 
   const config = typeConfig[type] || typeConfig.insurance;
   const Icon = config.icon;
@@ -32,13 +32,17 @@ const SummaryCard = ({ itemId, type }) => {
       </div>
     </div>
   );
-};
+});
 
 export const MatchSummaryView = () => {
   const navigate = useNavigate();
+  const resetNavigation = useNavigationStore(state => state.resetNavigation);
   const matchedBenefits = useDataStore(state => state.matchedBenefits);
 
-  const resetToHome = () => navigate('/dashboard');
+  const resetToHome = () => {
+    resetNavigation();
+    navigate('/');
+  };
   const viewTimeline = () => navigate('/result');
 
   // If navigated directly without any scan data

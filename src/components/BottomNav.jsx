@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Gift, ScanSearch, CalendarCheck, BarChart3, ListOrdered } from 'lucide-react';
+import { Home, Gift, ScanSearch, CalendarCheck, User, ListOrdered } from 'lucide-react';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -42,8 +42,8 @@ export const BottomNav = () => {
         <span className="text-[10px] font-bold">报销管家</span>
       </button>
 
-      <button onClick={() => navigate('/b2b')} className={`flex flex-col items-center p-2 w-1/5 ${currentPath === '/b2b' ? 'text-teal-600 drop-shadow-sm' : 'text-slate-400'}`}>
-        <BarChart3 className="w-6 h-6 mb-1" />
+      <button onClick={() => navigate('/dashboard')} className={`flex flex-col items-center p-2 w-1/5 ${currentPath === '/dashboard' ? 'text-teal-600 drop-shadow-sm' : 'text-slate-400'}`}>
+        <User className="w-6 h-6 mb-1" />
         <span className="text-[10px] font-bold">个人中心</span>
       </button>
     </div>

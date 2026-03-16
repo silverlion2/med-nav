@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Gift } from 'lucide-react';
+import { ShieldCheck, Gift, BarChart2 } from 'lucide-react';
 import { WelfareLibrary } from '../components/WelfareLibrary';
 import { useNavigate } from 'react-router-dom';
 import { useDataStore } from '../store/dataStore';
@@ -48,6 +48,12 @@ export const UnionHomeView = () => {
               </div>
             </div>
           </div>
+          <button 
+            onClick={() => navigate('/b2b')}
+            className="flex items-center text-[10px] bg-blue-700/50 hover:bg-blue-700 font-medium px-2 py-1 rounded-lg border border-blue-400/30 transition-colors"
+          >
+            <BarChart2 className="w-3 h-3 mr-1" /> 管理侧
+          </button>
         </div>
 
         {/* Family Roster UI (亲情账户切换) */}

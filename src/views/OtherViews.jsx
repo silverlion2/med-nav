@@ -22,6 +22,7 @@ export const CalculatingView = () => {
 
 export const HookingView = () => {
   const { handleGenerateCode } = useMedAPI();
+  const authError = useAuthStore(state => state.authError);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -42,7 +43,8 @@ export const HookingView = () => {
           <div className="inline-block bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-bold mb-3 border border-green-200">✓ 分析完成</div>
           <h2 className="text-xl font-bold text-slate-800 leading-snug mb-2">系统已为您生成<br/>专属医疗福利匹配报告</h2>
         </div>
-        <button onClick={handleBypass} disabled={loading} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex justify-center items-center shadow-lg shadow-blue-600/30 active:scale-95 transition-transform">
+        {authError && <div className="text-sm text-red-500 mb-4 text-center bg-red-50 p-3 rounded-lg border border-red-100">{authError}</div>}
+        <button onClick={handleBypass} disabled={loading} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex justify-center items-center shadow-lg shadow-blue-600/30 active:scale-95 transition-transform disabled:opacity-50">
           <Unlock size={18} className="mr-2" /> {loading ? '正在调取档案...' : '立即查看方案 (内测体验版)'}
         </button>
       </div>
