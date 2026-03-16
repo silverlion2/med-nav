@@ -4,6 +4,7 @@ import { useWizardStore } from '../store/wizardStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useMedAPI } from '../hooks/useMedAPI';
+import { useNavigate } from 'react-router-dom';
 
 export const CalculatingView = () => {
   const loadingText = useWizardStore(state => state.loadingText);
@@ -22,10 +23,11 @@ export const CalculatingView = () => {
 export const HookingView = () => {
   const { handleGenerateCode } = useMedAPI();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleBypass = async () => {
     setLoading(true);
-    await handleGenerateCode(true); // pass MVP flag
+    await handleGenerateCode(true, navigate); // pass MVP flag and navigate
     setLoading(false);
   };
 

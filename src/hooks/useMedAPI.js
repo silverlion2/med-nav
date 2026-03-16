@@ -14,7 +14,7 @@ export const useMedAPI = () => {
   const { setStep } = useNavigationStore();
   const { setMatchedBenefits, setFeedback } = useDataStore();
 
-  const handleGenerateCode = async (isMVPBypass = false) => {
+  const handleGenerateCode = async (isMVPBypass = false, navigate = null) => {
     let currentPhone = phone;
     let currentAgreed = isAgreed;
     
@@ -59,6 +59,7 @@ export const useMedAPI = () => {
       if (isMVPBypass === true) {
         setHasScanned(true);
         setStep('landing');
+        if (navigate) navigate('/result');
       } else {
         setShowCodeModal(true);
       }
@@ -68,7 +69,7 @@ export const useMedAPI = () => {
     }
   };
 
-  const handleRetrieve = async () => {
+  const handleRetrieve = async (navigate = null) => {
     if (retrievePhone.length !== 11) { setRetrieveError('请输入正确的11位手机号码'); return; }
     if (retrieveCode.length !== 4) { setRetrieveError('请输入4位专属查询码'); return; }
     
@@ -94,6 +95,7 @@ export const useMedAPI = () => {
         setShowRetrieveModal(false);
         setHasScanned(true);
         setStep('landing');
+        if (navigate) navigate('/result');
       } else {
         setRetrieveError(data.message || '查询不到该档案');
       }

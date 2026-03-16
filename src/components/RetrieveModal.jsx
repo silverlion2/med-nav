@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
@@ -11,6 +12,7 @@ export const RetrieveModal = () => {
     retrieveError, isRetrieving
   } = useAuthStore();
   const { handleRetrieve } = useMedAPI();
+  const navigate = useNavigate();
 
   if (!showRetrieveModal) return null;
 
@@ -38,7 +40,7 @@ export const RetrieveModal = () => {
           />
         </div>
         {retrieveError && <div className="text-xs text-red-500 mb-4 text-center bg-red-50 p-2 rounded">{retrieveError}</div>}
-        <button onClick={handleRetrieve} disabled={isRetrieving} className={`w-full text-white font-bold py-3.5 rounded-xl flex justify-center items-center ${isRetrieving ? 'bg-orange-300' : 'bg-orange-500 active:scale-95'}`}>
+        <button onClick={() => handleRetrieve(navigate)} disabled={isRetrieving} className={`w-full text-white font-bold py-3.5 rounded-xl flex justify-center items-center ${isRetrieving ? 'bg-orange-300' : 'bg-orange-500 active:scale-95'}`}>
           {isRetrieving ? '努力查询中...' : '一键找回报告'}
         </button>
       </div>
