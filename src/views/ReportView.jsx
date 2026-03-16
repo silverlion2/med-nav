@@ -5,8 +5,10 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
 import { BenefitCard } from '../components/BenefitCard';
+import { ClarificationModal } from '../components/ClarificationModal';
 
 export const ReportView = () => {
+  const [isClarifyOpen, setIsClarifyOpen] = React.useState(false);
   const phone = useAuthStore(state => state.phone);
   const resetNavigation = useNavigationStore(state => state.resetNavigation);
   const matchedBenefits = useDataStore(state => state.matchedBenefits);
@@ -97,12 +99,15 @@ export const ReportView = () => {
             <h2 className="text-base font-bold text-gray-600 mb-4 flex items-center"><HelpCircle size={18} className="mr-2 text-gray-400" /> AI 待确认福利</h2>
             <p className="text-xs text-gray-500 mb-4">系统发现以下隐藏福利可能适合您，但在确认几项关键信息前无法直接推荐：</p>
             {clarification.map(id => (
-              <div key={id} className="opacity-70 grayscale-[30%]">
+              <div key={id} className="opacity-70 grayscale-[30%] pointer-events-none">
                  <BenefitCard itemId={id} lineColor="bg-gray-400" borderColor="border-gray-200" />
               </div>
             ))}
-            <button className="w-full mt-2 py-3 bg-gray-100 text-gray-700 text-sm font-bold rounded-xl border border-gray-200 flex items-center justify-center">
-              <Sparkles size={16} className="mr-2" /> 补充信息以解锁更多福利 (开发中)
+            <button 
+               onClick={() => setIsClarifyOpen(true)}
+               className="w-full mt-2 py-3 bg-gray-100 text-gray-700 text-sm font-bold rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors"
+            >
+              <Sparkles size={16} className="mr-2" /> 补充信息以解锁以上福利
             </button>
           </div>
         )}
@@ -112,6 +117,11 @@ export const ReportView = () => {
 
   return (
     <div className="flex-1 w-full bg-slate-50 flex flex-col overflow-y-auto relative pb-10">
+      <ClarificationModal 
+        isOpen={isClarifyOpen} 
+        onClose={() => setIsClarifyOpen(false)} 
+        clarificationItems={matchedBenefits?.clarification || []} 
+      />
       <div className={`p-6 pt-10 text-white rounded-b-3xl shadow-[0_10px_30px_rgba(220,38,38,0.15)] shrink-0 bg-gradient-to-br from-red-600 to-red-700 relative overflow-hidden`}>
         {/* Decorative circle */}
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>

@@ -4,6 +4,7 @@ import { useWizardStore } from '../store/wizardStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
 import { BenefitCard } from './BenefitCard';
+import { benefitDetails } from '../data/content';
 
 export const WelfareLibrary = () => {
   const { welfareCategory, setWelfareCategory, hasScanned } = useWizardStore();
@@ -93,47 +94,59 @@ export const WelfareLibrary = () => {
 
       {/* 2. 疾病专项福利列表 (生病人群，需AI识别解锁) */}
       {welfareCategory === 'disease' && !hasScanned && (
-        <div className="animate-in slide-in-from-right-4 duration-300 mt-6 md:mt-10">
-          <div className="bg-gradient-to-b from-blue-50 to-white p-8 rounded-3xl shadow-sm border border-blue-100 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-            
-            <div className="relative mx-auto w-24 h-24 mb-6">
-              <div className="absolute inset-0 bg-blue-200 rounded-full animate-ping opacity-20"></div>
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center border-4 border-white shadow-lg relative z-10">
-                <Lock className="w-10 h-10 text-blue-500 mb-1" />
-              </div>
+        <div className="mt-4 animate-in fade-in duration-300">
+          <div className="bg-blue-50 text-blue-700 text-xs p-3 rounded-xl flex items-center justify-between border border-blue-200 mb-6 shadow-sm sticky top-1 z-10">
+            <div className="flex items-center">
+               <Lock className="w-4 h-4 mr-2 shrink-0" /> 以下是大病福利全库，内容已加密
             </div>
-
-            <h4 className="text-xl font-bold text-gray-800 mb-3 tracking-tight">专属大病福利库已加密</h4>
-            <div className="text-sm text-gray-500 mb-8 space-y-2 leading-relaxed px-2">
-              <p>为了精准匹配千万级别的医保、商保及药企援助资金，系统需要先了解您的基本健康情况。</p>
-              <p className="text-blue-600 bg-blue-50 inline-block px-3 py-1 rounded-full font-medium mt-2">表单极简，仅需 5 秒</p>
-            </div>
-            
-            <button 
-              onClick={handleScanClick}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 active:scale-95 transition-all"
-            >
-              <Camera className="w-5 h-5 mr-2" />
-              完善病历，一键解锁福利
+            <button onClick={handleScanClick} className="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold shadow-sm active:bg-blue-700 transition-colors">
+              智能测算解锁
             </button>
-            <p className="text-[10px] text-gray-400 mt-4">已通过 PIPL 隐私安全认证，数据仅作匹配使用</p>
+          </div>
+          
+          <div className="px-2">
+            {Object.keys(benefitDetails).map(id => (
+              <BenefitCard 
+                key={id} 
+                itemId={id} 
+                locked={true} 
+                onLockedClick={handleScanClick} 
+              />
+            ))}
           </div>
         </div>
       )}
 
       {/* 疾病专项已解锁状态: 显示 Med-Nav 算出的结果! */}
       {welfareCategory === 'disease' && hasScanned && matchedBenefits && (
-        <div className="space-y-3 animate-in fade-in duration-300">
-          <div className="bg-green-50 text-green-700 text-xs p-3 rounded-lg flex items-center border border-green-200 mb-4">
-            <CheckCircle2 className="w-4 h-4 mr-1 shrink-0" /> 根据您的专属档案智能匹配到以下可用福利
+        <div className="space-y-3 animate-in fade-in duration-300 mt-4">
+          <div className="bg-green-50 text-green-700 text-xs p-3 rounded-lg flex items-center border border-green-200 mb-6 sticky top-1 z-10 shadow-sm">
+            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-2"><CheckCircle2 className="w-3.5 h-3.5" /></div> 
+            已根据您的专属档案解密适用福利
           </div>
           
-          <div className="px-2"> {/* Optional padding to align with Med-Nav cards visually */}
+          <div className="px-2"> 
+             {/* 优先展示匹配到的福利 (彩色，可点击) */}
              {matchedBenefits.urgent?.map(id => <BenefitCard key={id} itemId={id} lineColor="bg-red-500" borderColor="border-red-200" />)}
              {matchedBenefits.financial?.map(id => <BenefitCard key={id} itemId={id} lineColor="bg-orange-500" borderColor="border-orange-200" />)}
              {matchedBenefits.insurance?.map(id => <BenefitCard key={id} itemId={id} lineColor="bg-blue-500" borderColor="border-blue-200" />)}
              {matchedBenefits.health?.map(id => <BenefitCard key={id} itemId={id} lineColor="bg-green-500" borderColor="border-green-200" />)}
+             {matchedBenefits.clarification?.map(id => <BenefitCard key={id} itemId={id} lineColor="bg-slate-400" borderColor="border-slate-300" />)}
+
+             {/* 其余未匹配到的福利，展示在底部，置灰锁定 */}
+             {Object.keys(benefitDetails).map(id => {
+                const isMatched = 
+                  (matchedBenefits.urgent || []).includes(id) ||
+                  (matchedBenefits.financial || []).includes(id) ||
+                  (matchedBenefits.insurance || []).includes(id) ||
+                  (matchedBenefits.health || []).includes(id) ||
+                  (matchedBenefits.clarification || []).includes(id);
+                
+                if (!isMatched) {
+                  return <BenefitCard key={`unmatched-${id}`} itemId={id} locked={true} />;
+                }
+                return null;
+             })}
           </div>
         </div>
       )}

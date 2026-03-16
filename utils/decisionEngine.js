@@ -1,4 +1,7 @@
-import { benefitEngine } from '../src/services/BenefitEngine.js';
+import { BenefitEngine } from '../src/services/BenefitEngine.js';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const benefitData = require('../src/data/dictionary.json');
 
 /**
  * 医疗省钱导航：高召回率规则匹配引擎 (v2: Robust Benefit Engine)
@@ -10,6 +13,7 @@ export function runDecisionEngine(profileData) {
   const structuredProfile = mapFormDataToProfile(profileData || {});
   
   // 2. 运行强类型规则引擎
+  const benefitEngine = new BenefitEngine(benefitData);
   const evaluationResult = benefitEngine.evaluate(structuredProfile);
   
   // 3. 将结果重新分组给前端渲染 (保持兼容原有的 UI 分组逻辑，但数据来源变严格)

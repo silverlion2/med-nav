@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Gift } from 'lucide-react';
 import { useNavigationStore } from './store/navigationStore';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 // Eagerly Load Home and Shell Elements
 import { UnionHomeView } from './views/UnionHomeView';
@@ -23,13 +23,23 @@ const UnionB2BView = lazy(() => import('./views/UnionOtherViews').then(module =>
 
 const AppContent = () => {
   const { step } = useNavigationStore();
+  const location = useLocation();
+
+  const getTopColor = () => {
+    if (step !== 'landing') return 'bg-gray-50';
+    if (location.pathname === '/') return 'bg-white';
+    if (location.pathname === '/dashboard') return 'bg-blue-600';
+    if (location.pathname === '/b2b') return 'bg-slate-900';
+    if (location.pathname === '/welfare') return 'bg-white';
+    return 'bg-gray-50';
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 sm:p-4 font-sans">
       <div className="w-full sm:max-w-[400px] h-[100dvh] sm:h-[800px] bg-gray-50 sm:rounded-[40px] shadow-2xl overflow-hidden flex flex-col relative sm:border-8 border-0 border-gray-900">
         
         {/* Fake Top Notch for UI */}
-        <div className="hidden sm:flex h-6 w-full bg-blue-600 justify-center items-center z-50 absolute top-0">
+        <div className={`hidden sm:flex h-6 w-full justify-center items-center z-50 absolute top-0 ${getTopColor()}`}>
           <div className="w-1/3 h-4 bg-black rounded-b-xl"></div>
         </div>
 

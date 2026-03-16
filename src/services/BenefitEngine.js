@@ -1,13 +1,10 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const benefitData = require('../data/dictionary.json');
-
 /**
  * Deterministic rules engine to filter benefits based on a structured UserProfile.
  * This guarantees robustness and prevents the LLM from hallucinating eligibility.
  */
 export class BenefitEngine {
-  constructor(data = benefitData) {
+  constructor(data) {
+    if (!data) throw new Error("BenefitEngine requires JSON data upon initialization");
     this.benefits = data;
   }
 
@@ -109,5 +106,3 @@ export class BenefitEngine {
   }
 }
 
-// Singleton instance for the app
-export const benefitEngine = new BenefitEngine();
