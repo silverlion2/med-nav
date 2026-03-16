@@ -43,14 +43,17 @@ export default async function handler(req) {
     const { matchedBenefits, profileSummary } = await req.json();
 
     // DeepSeek's API is OpenAI-compatible, so we reuse createOpenAI with a custom baseURL
-    let provider, modelId;
+    let provider, modelId, providerName;
     if (deepseekKey) {
-      provider = createOpenAI({ apiKey: deepseekKey, baseURL: 'https://api.deepseek.com/v1' });
-      modelId = 'deepseek-chat';  // DeepSeek-V3 (the latest, cheapest option)
+      provider = createOpenAI({ apiKey: deepseekKey, baseURL: 'https://api.deepseek.com' });
+      modelId = 'deepseek-chat';
+      providerName = 'DeepSeek';
     } else {
       provider = createOpenAI({ apiKey: openaiKey });
       modelId = 'gpt-4o-mini';
+      providerName = 'OpenAI';
     }
+    console.log(`[generate-summary] Using provider: ${providerName}, model: ${modelId}`);
 
     // Build a deterministic context string from the engine results
     const urgentList = (matchedBenefits?.urgent || []).join('、') || '无';
@@ -83,7 +86,7 @@ export default async function handler(req) {
       model: provider(modelId),
       system: systemPrompt,
       prompt: userPrompt,
-      maxTokens: 300,
+      maxTokens: 200,
       temperature: 0.7,
     });
 

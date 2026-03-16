@@ -26,12 +26,16 @@ export const ReportView = () => {
     const fetchSummary = async () => {
       setIsStreaming(true);
       setAiSummary('');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
       try {
         const res = await fetch('/api/generate-summary', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ matchedBenefits, profileSummary: formData }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (!res.ok || !res.body) {
           throw new Error('Stream unavailable');
