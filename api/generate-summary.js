@@ -37,7 +37,7 @@ export default async function handler(req) {
       // DeepSeek uses OpenAI-compatible format
       provider = createOpenAI({
         apiKey: deepseekKey,
-        baseURL: 'https://api.deepseek.com',
+        baseURL: 'https://api.deepseek.com/v1',
       });
       modelId = 'deepseek-chat';
       providerName = 'DeepSeek';
