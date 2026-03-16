@@ -85,7 +85,7 @@ export const LandingView = () => {
 
         <div className="flex justify-between mt-6 px-2">
           <button 
-            onClick={() => setStep('health_benefits')} 
+            onClick={() => navigate('/welfare')} 
             className="text-slate-400 text-xs flex items-center hover:text-white transition-colors outline-none"
           >
             <Heart size={12} className="mr-1" /> 通用健康福利
