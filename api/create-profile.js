@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 import { runDecisionEngine } from '../utils/decisionEngine.js';
 import { Redis } from '@upstash/redis';
@@ -8,8 +8,13 @@ const hasDatabase = !!process.env.DATABASE_URL;
 let prisma = null;
 
 if (hasDatabase) {
-  prisma = global.prisma || new PrismaClient();
-  if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    prisma = global.prisma || new PrismaClient();
+    if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+  } catch (e) {
+    console.log("Prisma Client not available, continuing without database.");
+  }
 }
 
 // Initialize Redis for rate limiting

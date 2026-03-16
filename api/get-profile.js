@@ -1,10 +1,20 @@
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 import crypto from 'crypto'
 // 🚀 引入核心逻辑引擎，让老用户找回时也能动态计算！
 import { runDecisionEngine } from '../utils/decisionEngine.js';
 
-const prisma = global.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+const hasDatabase = !!process.env.DATABASE_URL;
+let prisma = null;
+
+if (hasDatabase) {
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    prisma = global.prisma || new PrismaClient();
+    if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+  } catch (e) {
+    console.log("Prisma Client not available, continuing without database.");
+  }
+}
 
 const rateLimitMap = new Map();
 
@@ -14,6 +24,9 @@ function hashPhone(phone) {
 }
 
 async function withRetry(fn, retries = 3) {
+  // If no prisma, just execute the mock function
+  if (!prisma) return await fn();
+
   for (let i = 0; i < retries; i++) {
     try { 
       return await fn(); 

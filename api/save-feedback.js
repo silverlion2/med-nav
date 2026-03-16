@@ -1,8 +1,18 @@
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 import crypto from 'crypto'
 
-const prisma = global.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+const hasDatabase = !!process.env.DATABASE_URL;
+let prisma = null;
+
+if (hasDatabase) {
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    prisma = global.prisma || new PrismaClient();
+    if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+  } catch (e) {
+    console.log("Prisma Client not available, continuing without database.");
+  }
+}
 
 // --- 🛡️ 隐私保护：必须与建档接口保持完全一致的 Hash 加密算法 ---
 function hashPhone(phone) {
