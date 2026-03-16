@@ -1,4 +1,6 @@
-import benefitData from '../data/dictionary.json';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const benefitData = require('../data/dictionary.json');
 
 /**
  * Deterministic rules engine to filter benefits based on a structured UserProfile.
