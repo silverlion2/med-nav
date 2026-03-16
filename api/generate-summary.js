@@ -13,6 +13,7 @@ export default async function handler(req) {
   // Support multiple providers: DeepSeek (preferred, cheaper) → OpenAI (fallback)
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
+  console.log(`[generate-summary] DeepSeek key present: ${!!deepseekKey}, OpenAI key present: ${!!openaiKey}`);
 
   if (!deepseekKey && !openaiKey) {
     // Graceful fallback: return a mock streamed summary if no key is configured
