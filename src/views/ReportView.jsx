@@ -4,15 +4,68 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
+import { useWizardStore } from '../store/wizardStore';
 import { BenefitCard } from '../components/BenefitCard';
 import { ClarificationModal } from '../components/ClarificationModal';
 
 export const ReportView = () => {
   const [isClarifyOpen, setIsClarifyOpen] = React.useState(false);
+  const [aiSummary, setAiSummary] = React.useState('');
+  const [isStreaming, setIsStreaming] = React.useState(false);
+  const [hasStreamed, setHasStreamed] = React.useState(false);
   const phone = useAuthStore(state => state.phone);
   const resetNavigation = useNavigationStore(state => state.resetNavigation);
   const matchedBenefits = useDataStore(state => state.matchedBenefits);
+  const formData = useWizardStore(state => state.formData);
   const navigate = useNavigate();
+
+  // Stream AI summary when matchedBenefits changes
+  React.useEffect(() => {
+    if (!matchedBenefits || hasStreamed) return;
+
+    const fetchSummary = async () => {
+      setIsStreaming(true);
+      setAiSummary('');
+      try {
+        const res = await fetch('/api/generate-summary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matchedBenefits, profileSummary: formData }),
+        });
+
+        if (!res.ok || !res.body) {
+          throw new Error('Stream unavailable');
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+
+        while (!done) {
+          const { value, done: readerDone } = await reader.read();
+          done = readerDone;
+          if (value) {
+            setAiSummary(prev => prev + decoder.decode(value, { stream: true }));
+          }
+        }
+      } catch (err) {
+        console.warn('AI summary stream failed, using fallback:', err.message);
+        // Deterministic fallback
+        const { urgent = [], financial = [], insurance = [], health = [], clarification = [] } = matchedBenefits;
+        let fallback = "根据您的医疗情况评估：";
+        if (urgent.length > 0) fallback += "当前最优先的任务是处理高价值的【红线福利】（如门特或靶向药援助），请务必在自费付款前完成申请。";
+        else if (insurance.length > 0 || financial.length > 0) fallback += "系统为您匹配到了【资金报销与兜底】福利，请在出院阶段收集好各种发票清单。";
+        else if (health.length > 0) fallback += "目前主要为您匹配到了部分【日常健康福利】。";
+        if (clarification.length > 0) fallback += " 此外，有几个潜在福利需要您补充信息才能解锁。";
+        setAiSummary(fallback);
+      } finally {
+        setIsStreaming(false);
+        setHasStreamed(true);
+      }
+    };
+
+    fetchSummary();
+  }, [matchedBenefits, hasStreamed, formData]);
 
   const goHome = () => {
     resetNavigation();
@@ -39,34 +92,18 @@ export const ReportView = () => {
       return <div className="text-center text-gray-500 py-10">抱歉，系统暂未匹配到对应的福利支持。</div>;
     }
 
-    // 动态生成类似 AI 语气的总结
-    const generateDynamicSummary = () => {
-       let summary = "根据您的医疗情况评估：";
-       if (hasUrgent) {
-          summary += "当前最优先的任务是处理高价值的【红线福利】（如门特或靶向药援助），请务必在自费付款前完成申请。";
-       } else if (hasInsurance || hasFinancial) {
-          summary += "虽然没有紧急前置要求，但系统为您匹配到了【资金报销与兜底】福利，请在出院阶段收集好各种发票清单。";
-       } else if (hasHealth) {
-          summary += "目前主要为您匹配到了部分【日常健康福利】，如免费筛查或慢病管理项目。";
-       }
-       
-       if (hasClarification) {
-          summary += " 此外，AI 引擎发现有几个潜在的高价值福利非常适合您，但我们需要您补充一些细节（如具体年龄或特殊身份）才能最终确认为您解锁。";
-       }
-
-       return summary;
-    };
-
     return (
       <div className="space-y-10">
-        {/* Mock AI Summary Paragraph */}
+        {/* AI Streamed Summary */}
         <div className="bg-orange-50/80 border border-orange-100 p-5 rounded-2xl animate-in fade-in duration-300">
           <div className="flex items-center mb-3">
             <Sparkles className="text-orange-500 mr-2" size={20} />
             <h2 className="font-bold text-gray-800">AI 智能分析总结</h2>
+            {isStreaming && <div className="ml-2 w-4 h-4 border-2 border-orange-300 border-t-orange-600 rounded-full animate-spin"></div>}
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            {generateDynamicSummary()}
+          <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+            {aiSummary || <span className="text-gray-400 animate-pulse">AI 正在为您分析匹配结果...</span>}
+            {isStreaming && <span className="inline-block w-1.5 h-4 bg-orange-500 ml-0.5 animate-pulse align-text-bottom rounded-sm"></span>}
           </p>
         </div>
 
