@@ -4,7 +4,7 @@ import { runDecisionEngine } from '../utils/decisionEngine.js';
 import { Redis } from '@upstash/redis';
 
 // Only initialize Prisma if a database URL is actually provided
-const hasDatabase = !!process.env.DATABASE_URL;
+const hasDatabase = !!process.env.POSTGRES_PRISMA_URL;
 let prisma = null;
 
 if (hasDatabase) {

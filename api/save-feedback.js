@@ -1,7 +1,7 @@
 // import { PrismaClient } from '@prisma/client'
 import crypto from 'crypto'
 
-const hasDatabase = !!process.env.DATABASE_URL;
+const hasDatabase = !!process.env.POSTGRES_PRISMA_URL;
 let prisma = null;
 
 if (hasDatabase) {

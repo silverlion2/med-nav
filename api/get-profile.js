@@ -3,7 +3,7 @@ import crypto from 'crypto'
 // 🚀 引入核心逻辑引擎，让老用户找回时也能动态计算！
 import { runDecisionEngine } from '../utils/decisionEngine.js';
 
-const hasDatabase = !!process.env.DATABASE_URL;
+const hasDatabase = !!process.env.POSTGRES_PRISMA_URL;
 let prisma = null;
 
 if (hasDatabase) {
