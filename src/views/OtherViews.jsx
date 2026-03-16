@@ -51,7 +51,13 @@ export const HookingView = () => {
 };
 
 export const HealthBenefitsView = () => {
-  const resetToHome = useNavigationStore(state => state.resetNavigation);
+  const resetNavigation = useNavigationStore(state => state.resetNavigation);
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    resetNavigation();
+    navigate('/');
+  };
 
   return (
     <div className="flex-1 w-full bg-gray-50 flex flex-col overflow-y-auto relative pb-10">
@@ -61,7 +67,7 @@ export const HealthBenefitsView = () => {
             <h1 className="text-2xl font-bold mb-2">全民日常健康福利</h1>
             <p className="text-sm opacity-90">亚健康预防与常规筛查的“免费午餐”</p>
           </div>
-          <button onClick={resetToHome} className="bg-white/20 px-3 py-1.5 rounded-full flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
+          <button onClick={goHome} className="bg-white/20 px-3 py-1.5 rounded-full flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
         </div>
       </div>
       <div className="p-6 flex-1 space-y-4">
@@ -77,7 +83,7 @@ export const HealthBenefitsView = () => {
         </div>
       </div>
       <div className="px-6 pb-6 shrink-0">
-        <button onClick={resetToHome} className="w-full bg-gray-800 text-white font-bold py-4 rounded-xl flex justify-center items-center">
+        <button onClick={goHome} className="w-full bg-gray-800 text-white font-bold py-4 rounded-xl flex justify-center items-center">
            <Home size={18} className="mr-2" /> 返回导航主页
         </button>
       </div>

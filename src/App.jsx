@@ -46,7 +46,7 @@ const AppContent = () => {
                       <Gift className="w-6 h-6 text-blue-600 mr-2" />
                       福利大厅
                     </h2>
-                    <p className="text-xs text-gray-500 mt-1">汇聚医保、商保、工会及药企援助资源</p>
+                    <p className="text-xs text-gray-500 mt-1">汇聚医保、商保、互助及药企援助资源</p>
                   </div>
                   <div className="px-5 mt-4">
                     <WelfareLibrary />

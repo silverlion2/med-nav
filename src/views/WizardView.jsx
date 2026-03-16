@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, CheckCircle2, FileText, Wand2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { questions } from '../data/content';
 import { useWizardStore } from '../store/wizardStore';
 import { useNavigationStore } from '../store/navigationStore';
@@ -7,7 +8,13 @@ import { useNavigationStore } from '../store/navigationStore';
 export const WizardView = () => {
   const { formData, handleOptionSelect } = useWizardStore();
   const { setStep } = useNavigationStore();
-  const resetToHome = useNavigationStore(state => state.resetNavigation);
+  const resetNavigation = useNavigationStore(state => state.resetNavigation);
+  const navigate = useNavigate();
+
+  const resetToHome = () => {
+    resetNavigation();
+    navigate('/');
+  };
 
   const triggerHaptic = () => {
     if (navigator.vibrate) navigator.vibrate(40);

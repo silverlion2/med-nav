@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, AlertTriangle, ShieldCheck, Activity, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
@@ -7,8 +8,14 @@ import { BenefitCard } from '../components/BenefitCard';
 
 export const ReportView = () => {
   const phone = useAuthStore(state => state.phone);
-  const resetToHome = useNavigationStore(state => state.resetNavigation);
+  const resetNavigation = useNavigationStore(state => state.resetNavigation);
   const matchedBenefits = useDataStore(state => state.matchedBenefits);
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    resetNavigation();
+    navigate('/');
+  };
 
   const renderDynamicTimeline = () => {
     if (!matchedBenefits) {
@@ -63,7 +70,7 @@ export const ReportView = () => {
 
         <div className="flex justify-between items-start mb-1 relative z-10">
           <div className="text-sm opacity-80">专属档案：{phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
-          <button onClick={resetToHome} className="bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
+          <button onClick={goHome} className="bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm"><Home size={16} className="mr-1" /> 主页</button>
         </div>
         <h1 className="text-2xl font-bold mb-4">医疗财务规划与省钱指南</h1>
         <div className="bg-white/20 p-3 rounded-lg flex items-start border border-white/30 backdrop-blur-sm">
@@ -77,7 +84,7 @@ export const ReportView = () => {
       </div>
 
       <div className="px-6 pb-6 text-center shrink-0">
-         <button onClick={resetToHome} className="w-full bg-white text-gray-700 font-bold py-3.5 rounded-xl border border-gray-200 mb-4 shadow-sm active:bg-gray-50 flex justify-center items-center">
+         <button onClick={goHome} className="w-full bg-white text-gray-700 font-bold py-3.5 rounded-xl border border-gray-200 mb-4 shadow-sm active:bg-gray-50 flex justify-center items-center">
            <Home size={18} className="mr-2" /> 重新测算 / 返回主页
          </button>
          <p className="text-[10px] text-gray-400">本报告基于规则引擎动态生成。不构成临床医疗用药建议。</p>
