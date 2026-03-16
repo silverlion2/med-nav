@@ -52,7 +52,8 @@ export const ClarificationModal = ({ isOpen, onClose, clarificationItems }) => {
       setFormData(updatedProfile);
 
       // 2. Re-run the BenefitEngine synchronously on the client side
-      const engine = new BenefitEngine(benefitData);
+      // Make sure to pass the actual array, not the wrapper object
+      const engine = new BenefitEngine(benefitData.benefits || benefitData);
       const newResults = engine.evaluate(updatedProfile);
       
       // 3. Update the global matches
