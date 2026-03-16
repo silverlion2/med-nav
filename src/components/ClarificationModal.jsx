@@ -51,13 +51,65 @@ export const ClarificationModal = ({ isOpen, onClose, clarificationItems }) => {
 
       setFormData(updatedProfile);
 
+      // 1.5 Map raw form data into the strict Profile schema that the Engine expects
+      const profile = {
+        insurance: [],
+        diseases: [],
+        location: 'national',
+        age: updatedProfile.age || null,
+        monthly_income: null,
+        special_status: updatedProfile.special_status || []
+      };
+
+      const rawInsurance = updatedProfile.insurance || updatedProfile.q4 || '';
+      if (rawInsurance.includes('职工')) profile.insurance.push('employee_basic');
+      if (rawInsurance.includes('居民') || rawInsurance.includes('新农合')) profile.insurance.push('resident_basic');
+      if (rawInsurance.includes('无基本医保')) profile.insurance.push('none');
+
+      const rawDisease = updatedProfile.disease || updatedProfile.q1 || '';
+      if (rawDisease.includes('恶性肿瘤')) profile.diseases.push('malignant_tumor', 'lung_cancer', 'breast_cancer');
+      if (rawDisease.includes('慢性病')) profile.diseases.push('chronic_disease', 'diabetes', 'hypertension');
+
+      const rawStatus = updatedProfile.q5 || [];
+      if (rawStatus.includes('北京市总工会会员')) profile.special_status.push('union_member');
+      if (rawStatus.includes('属于困难群体 (低保/特困/边缘)')) profile.special_status.push('low_income', 'poverty_stricken');
+      if (rawStatus.includes('患病前有购买商业保险')) profile.insurance.push('commercial_health', 'commercial_critical_illness');
+
       // 2. Re-run the BenefitEngine synchronously on the client side
       // Make sure to pass the actual array, not the wrapper object
       const engine = new BenefitEngine(benefitData.benefits || benefitData);
-      const newResults = engine.evaluate(updatedProfile);
+      const newResults = engine.evaluate(profile);
       
-      // 3. Update the global matches
-      setMatchedBenefits(newResults);
+      // 3. Update the global matches by grouping them exactly like the backend does
+      const groupedResults = {
+        urgent: [],
+        financial: [],
+        insurance: [],
+        health: [],
+        clarification: newResults.needsClarification
+      };
+
+      newResults.eligible.forEach(benefit => {
+        switch (benefit.benefit_type) {
+          case 'insurance_reimbursement':
+            if (benefit.id === 'men_te') groupedResults.urgent.push(benefit.id);
+            else groupedResults.insurance.push(benefit.id);
+            break;
+          case 'financial_assistance':
+            groupedResults.financial.push(benefit.id);
+            break;
+          case 'drug_discount':
+            if (benefit.id === 'pap_a') groupedResults.urgent.push(benefit.id);
+            else groupedResults.health.push(benefit.id);
+            break;
+          case 'social_service':
+          case 'diagnostic_support':
+            groupedResults.health.push(benefit.id);
+            break;
+        }
+      });
+
+      setMatchedBenefits(groupedResults);
       
       setIsUnlocking(false);
       onClose();

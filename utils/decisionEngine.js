@@ -22,7 +22,7 @@ export function runDecisionEngine(profileData) {
     financial: [],   // 找钱筹钱的 (免息分期、工会互助)
     insurance: [],   // 保险理赔的 (商保、惠民保)
     health: [],      // 健康羊毛 (筛查、EAP、PSP)
-    clarification: evaluationResult.needsClarification.map(item => item.benefit.id) // 留给 AI 追问的单子
+    clarification: evaluationResult.needsClarification // Preserve { benefit, missingFields } instead of just mapping IDs
   };
 
   // 为兼容 UI 分组，根据 benefit_type 分发

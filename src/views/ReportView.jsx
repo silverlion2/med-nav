@@ -139,9 +139,9 @@ export const ReportView = () => {
           <div className="animate-in slide-in-from-bottom-2 duration-1000 pb-6 border-t border-dashed border-gray-200 pt-8">
             <h2 className="text-base font-bold text-gray-600 mb-4 flex items-center"><HelpCircle size={18} className="mr-2 text-gray-400" /> AI 待确认福利</h2>
             <p className="text-xs text-gray-500 mb-4">系统发现以下隐藏福利可能适合您，但在确认几项关键信息前无法直接推荐：</p>
-            {clarification.map(id => (
-              <div key={id} className="opacity-70 grayscale-[30%] pointer-events-none">
-                 <BenefitCard itemId={id} lineColor="bg-gray-400" borderColor="border-gray-200" />
+            {clarification.map(item => (
+              <div key={item.benefit.id} className="opacity-70 grayscale-[30%] pointer-events-none">
+                 <BenefitCard itemId={item.benefit.id} lineColor="bg-gray-400" borderColor="border-gray-200" />
               </div>
             ))}
             <button 

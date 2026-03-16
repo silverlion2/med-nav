@@ -36,7 +36,9 @@ export default async function handler(req) {
     const financialList = (matchedBenefits?.financial || []).join('、') || '无';
     const insuranceList = (matchedBenefits?.insurance || []).join('、') || '无';
     const healthList = (matchedBenefits?.health || []).join('、') || '无';
-    const clarificationList = (matchedBenefits?.clarification || []).join('、') || '无';
+    const clarificationList = (matchedBenefits?.clarification || [])
+      .map(item => typeof item === 'object' ? item.benefit?.title : item)
+      .join('、') || '无';
 
     const systemPrompt = `你是一位专业且富有同理心的医保福利顾问AI助手「熊猫福利官」。根据后端规则引擎已计算好的福利匹配结果，为用户撰写简短、温暖的个性化总结。规则：1.不要自己判断资格 2.用自然语言描述福利而非代码ID 3.限制3-5句话 4.如有待确认福利则鼓励补充信息 5.中文回复。`;
 
