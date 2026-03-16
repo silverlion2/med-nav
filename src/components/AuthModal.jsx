@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useWizardStore } from '../store/wizardStore';
 import { useMedAPI } from '../hooks/useMedAPI';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthModal = () => {
   const { 
@@ -17,6 +18,7 @@ export const AuthModal = () => {
   const { setStep } = useNavigationStore();
   const setHasScanned = useWizardStore(state => state.setHasScanned);
   const { handleGenerateCode } = useMedAPI();
+  const navigate = useNavigate();
 
   const triggerHaptic = () => {
     if (navigator.vibrate) navigator.vibrate(40);
@@ -27,6 +29,7 @@ export const AuthModal = () => {
     setShowCodeModal(false);
     setHasScanned(true);
     setStep('landing');
+    navigate('/result');
   };
 
   if (showAuthModal) {

@@ -26,14 +26,6 @@ export const useWizardStore = create(
       set({ formData: { ...formData, [qId]: updated } });
     } else {
       set({ formData: { ...formData, [qId]: option } });
-      setTimeout(() => {
-        const currentWizardStep = get().wizardStep;
-        if (currentWizardStep < questions.length - 1) {
-          set({ wizardStep: currentWizardStep + 1 });
-        } else {
-           if (onComplete) onComplete();
-        }
-      }, 300);
     }
   },
 
