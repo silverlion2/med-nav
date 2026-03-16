@@ -3,8 +3,14 @@ import crypto from 'crypto';
 import { runDecisionEngine } from '../utils/decisionEngine.js';
 import { Redis } from '@upstash/redis';
 
-const prisma = global.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+// Only initialize Prisma if a database URL is actually provided
+const hasDatabase = !!process.env.DATABASE_URL;
+let prisma = null;
+
+if (hasDatabase) {
+  prisma = global.prisma || new PrismaClient();
+  if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+}
 
 // Initialize Redis for rate limiting
 // Fallback to null if not configured to prevent crash during local dev without Redis
@@ -82,6 +88,12 @@ export default async function handler(req, res) {
     // 引擎会返回按类别分好的对象：{ urgent: [...], financial: [...], ... }
     const engineResult = runDecisionEngine(profileData || {});
     
+    // 如果没有配置数据库环境变量 (Phase 1 纯内存模式)，我们直接返回引擎结果并跳过数据库写入
+    if (!hasDatabase || !prisma) {
+      console.log('No DATABASE_URL found. Running in Phase 1 purely in-memory mode.');
+      return res.status(200).json({ success: true, userId: 'mock-user-phase-1', assessmentId: 'mock-assessment-phase-1', engineResult });
+    }
+
     // 因为目前 schema.prisma 里 matchedBenefitsIds 设定的格式是 String[] 一维数组
     // 我们需要将引擎返回的对象拍平（flatten）成一个纯 ID 构成的数组
     const calculatedBenefits = Object.values(engineResult).flat();
