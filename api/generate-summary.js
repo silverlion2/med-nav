@@ -6,6 +6,15 @@ export const config = {
 };
 
 export default async function handler(req) {
+  // Quick debug: visit /api/generate-summary in browser to check env var status
+  if (req.method === 'GET') {
+    return new Response(JSON.stringify({
+      deepseek_key_set: !!process.env.DEEPSEEK_API_KEY,
+      openai_key_set: !!process.env.OPENAI_API_KEY,
+      deepseek_key_prefix: process.env.DEEPSEEK_API_KEY ? process.env.DEEPSEEK_API_KEY.substring(0, 5) + '...' : null,
+      hint: 'If both are false, the env var is not configured for this environment (Production vs Preview).'
+    }, null, 2), { headers: { 'Content-Type': 'application/json' } });
+  }
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), { status: 405 });
   }
