@@ -32,23 +32,6 @@ export default async function handler(req) {
   try {
     const { matchedBenefits, profileSummary } = await req.json();
 
-    let provider, modelId, providerName;
-    if (deepseekKey) {
-      // DeepSeek uses OpenAI-compatible format
-      provider = createOpenAI({
-        apiKey: deepseekKey,
-        baseURL: 'https://api.deepseek.com/v1',
-      });
-      modelId = 'deepseek-chat';
-      providerName = 'DeepSeek';
-    } else {
-      provider = createOpenAI({ apiKey: openaiKey });
-      modelId = 'gpt-4o-mini';
-      providerName = 'OpenAI';
-    }
-
-    console.log(`[generate-summary] Using ${providerName} / ${modelId}`);
-
     const urgentList = (matchedBenefits?.urgent || []).join('、') || '无';
     const financialList = (matchedBenefits?.financial || []).join('、') || '无';
     const insuranceList = (matchedBenefits?.insurance || []).join('、') || '无';
@@ -61,18 +44,50 @@ export default async function handler(req) {
 结果：紧急:${urgentList} | 资金:${financialList} | 保险:${insuranceList} | 健康:${healthList} | 待确认:${clarificationList}
 请撰写个性化总结。`;
 
-    // Use non-streaming generateText for reliability; stream later once confirmed working
-    const result = await generateText({
-      model: provider(modelId),
-      system: systemPrompt,
-      prompt: userPrompt,
-      maxTokens: 200,
-      temperature: 0.7,
-    });
+    let resultText = "";
 
-    console.log(`[generate-summary] Success! Got ${result.text.length} chars`);
+    if (deepseekKey) {
+      console.log(`[generate-summary] Using DeepSeek directly via fetch`);
+      const response = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${deepseekKey}`
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          max_tokens: 200,
+          temperature: 0.7
+        })
+      });
 
-    return new Response(result.text, {
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`DeepSeek API Error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      resultText = data.choices[0]?.message?.content || "";
+    } else {
+      console.log(`[generate-summary] Using OpenAI via AI SDK`);
+      const provider = createOpenAI({ apiKey: openaiKey });
+      const result = await generateText({
+        model: provider('gpt-4o-mini'),
+        system: systemPrompt,
+        prompt: userPrompt,
+        maxTokens: 200,
+        temperature: 0.7,
+      });
+      resultText = result.text;
+    }
+
+    console.log(`[generate-summary] Success! Got ${resultText.length} chars`);
+
+    return new Response(resultText, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
 
