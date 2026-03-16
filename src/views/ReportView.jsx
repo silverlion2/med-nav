@@ -3,6 +3,7 @@ import { Home, AlertTriangle, ShieldCheck, Activity, Heart } from 'lucide-react'
 import { useAuthStore } from '../store/authStore';
 import { useNavigationStore } from '../store/navigationStore';
 import { useDataStore } from '../store/dataStore';
+import { BenefitCard } from '../components/BenefitCard';
 
 export const ReportView = () => {
   const phone = useAuthStore(state => state.phone);
