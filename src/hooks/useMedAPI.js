@@ -59,7 +59,7 @@ export const useMedAPI = () => {
       if (isMVPBypass === true) {
         setHasScanned(true);
         setStep('landing');
-        if (navigate) navigate('/result');
+        if (navigate) navigate('/summary');
       } else {
         setShowCodeModal(true);
       }
@@ -95,7 +95,7 @@ export const useMedAPI = () => {
         setShowRetrieveModal(false);
         setHasScanned(true);
         setStep('landing');
-        if (navigate) navigate('/result');
+        if (navigate) navigate('/summary');
       } else {
         setRetrieveError(data.message || '查询不到该档案');
       }

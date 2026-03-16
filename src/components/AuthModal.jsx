@@ -29,7 +29,7 @@ export const AuthModal = () => {
     setShowCodeModal(false);
     setHasScanned(true);
     setStep('landing');
-    navigate('/result');
+    navigate('/summary');
   };
 
   if (showAuthModal) {

@@ -17,6 +17,7 @@ import { DrugSearchModal } from './components/DrugSearchModal';
 
 // Lazy Load Secondary Views (Code Splitting)
 const ReportView = lazy(() => import('./views/ReportView').then(module => ({ default: module.ReportView })));
+const MatchSummaryView = lazy(() => import('./views/MatchSummaryView').then(module => ({ default: module.MatchSummaryView })));
 const UnionTasksView = lazy(() => import('./views/UnionOtherViews').then(module => ({ default: module.UnionTasksView })));
 const UnionB2BView = lazy(() => import('./views/UnionOtherViews').then(module => ({ default: module.UnionB2BView })));
 
@@ -52,6 +53,7 @@ const AppContent = () => {
                   </div>
                 </div>
               } />
+              <Route path="/summary" element={<MatchSummaryView />} />
               <Route path="/result" element={<ReportView />} />
               <Route path="/tasks" element={<UnionTasksView />} />
               <Route path="/b2b" element={<UnionB2BView />} />
