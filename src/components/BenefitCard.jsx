@@ -4,7 +4,7 @@ import { benefitDetails } from '../data/content';
 import { useDataStore } from '../store/dataStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
-export const FeedbackButtons = ({ itemId }) => {
+const FeedbackButtons = ({ itemId }) => {
   const feedback = useDataStore(state => state.feedback);
   const { handleFeedback } = useMedAPI();
   const currentStatus = feedback[itemId];
