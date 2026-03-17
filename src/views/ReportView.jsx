@@ -169,7 +169,7 @@ export const ReportView = () => {
 
         <div className="flex justify-between items-start mb-1 relative z-10 w-full">
           <button onClick={goBack} className="bg-white/20 px-2 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm active:bg-white/30 transition-colors"><ChevronLeft size={16} /> 返回</button>
-          <div className="text-sm opacity-80 mt-1">专属档案：{phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
+          <div className="text-sm opacity-80 mt-1">专属档案：{(phone || '').replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
           <button onClick={goHome} className="bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center text-sm active:bg-white/30 transition-colors"><Home size={16} className="mr-1" /> 主页</button>
         </div>
         <h1 className="text-2xl font-bold mb-4">医疗财务规划与省钱指南</h1>

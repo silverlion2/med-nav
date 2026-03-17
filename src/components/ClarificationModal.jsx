@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Sparkles, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useDataStore } from '../store/dataStore';
 import { useWizardStore } from '../store/wizardStore';
@@ -10,6 +10,14 @@ export const ClarificationModal = ({ isOpen, onClose, clarificationItems }) => {
   const { setMatchedBenefits } = useDataStore();
   const [localData, setLocalData] = useState({});
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const unlockTimeoutRef = useRef(null);
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
+    };
+  }, []);
 
   if (!isOpen || !clarificationItems || clarificationItems.length === 0) return null;
 
@@ -28,8 +36,8 @@ export const ClarificationModal = ({ isOpen, onClose, clarificationItems }) => {
   const handleUnlock = () => {
     setIsUnlocking(true);
     
-    // Simulate a brief calculation delay for better UX
-    setTimeout(() => {
+    // Simulate a brief calculation delay for better UX (store ID for cleanup)
+    unlockTimeoutRef.current = setTimeout(() => {
       // 1. Merge the new data into the global formData profile
       const updatedProfile = { ...formData };
       

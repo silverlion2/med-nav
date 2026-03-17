@@ -19,7 +19,8 @@ const FeedbackButtons = ({ itemId }) => {
 };
 
 export const BenefitCard = ({ itemId, lineColor = 'bg-slate-300', borderColor = 'border-slate-200', locked = false, onLockedClick = null }) => {
-  const { feedback, setActiveDetail } = useDataStore();
+  const feedback = useDataStore(state => state.feedback);
+  const setActiveDetail = useDataStore(state => state.setActiveDetail);
   const item = benefitDetails[itemId];
   if (!item) return null;
 

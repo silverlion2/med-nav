@@ -81,7 +81,7 @@ export const AuthModal = () => {
             <p className="text-sm text-gray-400 mb-6">这是您的专属找回凭证，请务必截图保存：</p>
             
             <div className="bg-black/50 border border-gray-600 rounded-xl p-4 mb-6 relative">
-              <div className="text-[10px] text-gray-500 absolute top-2 left-3">手机号 {phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
+              <div className="text-[10px] text-gray-500 absolute top-2 left-3">手机号 {(phone || '').replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</div>
               <div className="text-4xl font-mono font-bold tracking-[0.2em] text-orange-400 mt-2">{uniqueCode}</div>
             </div>
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { useDataStore } from '../store/dataStore';
 
 export const ActiveDetailModal = () => {
-  const { activeDetail, setActiveDetail } = useDataStore();
+  const activeDetail = useDataStore(state => state.activeDetail);
+  const setActiveDetail = useDataStore(state => state.setActiveDetail);
 
   if (!activeDetail) return null;
 

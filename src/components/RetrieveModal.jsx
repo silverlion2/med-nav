@@ -5,12 +5,14 @@ import { useAuthStore } from '../store/authStore';
 import { useMedAPI } from '../hooks/useMedAPI';
 
 export const RetrieveModal = () => {
-  const {
-    showRetrieveModal, setShowRetrieveModal,
-    retrievePhone, setRetrievePhone,
-    retrieveCode, setRetrieveCode,
-    retrieveError, isRetrieving
-  } = useAuthStore();
+  const showRetrieveModal = useAuthStore(state => state.showRetrieveModal);
+  const setShowRetrieveModal = useAuthStore(state => state.setShowRetrieveModal);
+  const retrievePhone = useAuthStore(state => state.retrievePhone);
+  const setRetrievePhone = useAuthStore(state => state.setRetrievePhone);
+  const retrieveCode = useAuthStore(state => state.retrieveCode);
+  const setRetrieveCode = useAuthStore(state => state.setRetrieveCode);
+  const retrieveError = useAuthStore(state => state.retrieveError);
+  const isRetrieving = useAuthStore(state => state.isRetrieving);
   const { handleRetrieve } = useMedAPI();
   const navigate = useNavigate();
 

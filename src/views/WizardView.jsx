@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Home, CheckCircle2, FileText, Wand2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { questions } from '../data/content';
@@ -10,8 +10,19 @@ export const WizardView = () => {
   const { setStep } = useNavigationStore();
   const resetNavigation = useNavigationStore(state => state.resetNavigation);
   const navigate = useNavigate();
+  const timersRef = useRef([]);
+
+  // Clear all pending timers on unmount to prevent phantom navigation
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(id => clearTimeout(id));
+      timersRef.current = [];
+    };
+  }, []);
 
   const resetToHome = () => {
+    timersRef.current.forEach(id => clearTimeout(id));
+    timersRef.current = [];
     resetNavigation();
     navigate('/');
   };
@@ -22,15 +33,19 @@ export const WizardView = () => {
 
   const startCalculation = () => {
     setStep('calculating');
-    // Start calculation animations
-    setTimeout(() => useWizardStore.getState().setLoadingText('正在基于逻辑树匹配福利...'), 800);
-    setTimeout(() => useWizardStore.getState().setLoadingText('正在进行医学与经济排雷...'), 1600);
-    setTimeout(() => useWizardStore.getState().setLoadingText('正在生成专属智能时间轴...'), 2400);
-    setTimeout(() => setStep('hook'), 3200);
+    // Start calculation animations (store IDs for cleanup)
+    timersRef.current = [
+      setTimeout(() => useWizardStore.getState().setLoadingText('正在基于逻辑树匹配福利...'), 800),
+      setTimeout(() => useWizardStore.getState().setLoadingText('正在进行医学与经济排雷...'), 1600),
+      setTimeout(() => useWizardStore.getState().setLoadingText('正在生成专属智能时间轴...'), 2400),
+      setTimeout(() => setStep('hook'), 3200)
+    ];
   };
 
   // Check if at least some questions are answered to allow submission (basic validation)
-  const isFormValid = Object.keys(formData).length > 2;
+  // Validate against actual required question IDs instead of key count
+  const requiredIds = ['disease', 'location', 'insurance'];
+  const isFormValid = requiredIds.every(id => formData[id] !== undefined && formData[id] !== '');
 
   // Simplified Questionnaire - Only Core Routing Fields
   const coreQuestions = [

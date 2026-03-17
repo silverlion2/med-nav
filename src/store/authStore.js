@@ -30,12 +30,14 @@ export const useAuthStore = create((set) => ({
   resetAuth: () => set({
     phone: '',
     isAgreed: false,
+    uniqueCode: '',
     showAuthModal: false,
     showCodeModal: false,
     authError: '',
     showRetrieveModal: false,
     retrievePhone: '',
     retrieveCode: '',
-    retrieveError: ''
+    retrieveError: '',
+    isRetrieving: false
   })
 }));

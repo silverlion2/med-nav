@@ -10,6 +10,7 @@ const typeConfig = {
   financial: { icon: Activity, color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-200' },
   insurance: { icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-50', border: 'border-blue-200' },
   health: { icon: Heart, color: 'text-green-500', bg: 'bg-green-50', border: 'border-green-200' },
+  clarification: { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-50', border: 'border-amber-200' },
 };
 
 const SummaryCard = React.memo(({ itemId, type }) => {
